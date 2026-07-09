@@ -82,54 +82,42 @@
   .filter-clear:hover { color:var(--accent); background:var(--accent-lt); }
   .filter-results { margin-left:auto; font-size:11px; color:var(--ink-soft); white-space:nowrap; }
 
-  /* ACCOUNT ROWS */
-  .account-grid { display:flex; flex-direction:column; gap:8px; }
-  .account-card { background:var(--white); border:1px solid var(--rule); border-radius:12px; padding:14px 20px; cursor:pointer; transition:all .15s; min-width:0; display:grid; grid-template-columns:220px 80px 110px 160px 1fr 1fr 1fr 260px; align-items:center; gap:16px; }
-  .account-card:hover { border-color:var(--accent); box-shadow:0 3px 14px rgba(119,68,255,.08); }
+  /* ACCOUNT GRID */
+  .account-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .account-card { background:var(--white); border:1px solid var(--rule); border-radius:12px; padding:18px; cursor:pointer; transition:all .18s; min-width:0; display:block; }
+  .account-card:hover { border-color:var(--accent); box-shadow:0 6px 22px rgba(119,68,255,.09); transform:translateY(-2px); }
   .account-card.border-risk    { border-left:3px solid var(--amber); }
   .account-card.border-unhappy { border-left:3px solid var(--red); }
   .account-card.border-churned { border-left:3px solid var(--red); }
 
-  /* ROW HEADER */
-  .row-header { display:grid; grid-template-columns:220px 80px 110px 160px 1fr 1fr 1fr 260px; gap:16px; padding:0 20px 8px; border-bottom:1px solid var(--rule); margin-bottom:4px; }
-  .row-header-cell { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); }
+  .row-header { display:none; }
 
-  .pill { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:3px 9px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
-  .pill-happy   { background:var(--green-lt); color:var(--green); }
-  .pill-risk    { background:var(--amber-lt); color:var(--amber); }
-  .pill-unhappy { background:var(--red-lt);   color:var(--red); }
-  .pill-churned { background:var(--red-lt);   color:var(--red); }
-  .pill-dot { width:5px; height:5px; border-radius:50%; display:inline-block; }
-  .dot-happy{background:var(--green)} .dot-risk{background:var(--amber)} .dot-unhappy{background:var(--red)} .dot-churned{background:var(--red)}
+  .card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:12px; }
+  .card-name { font-family:var(--serif); font-size:15px; font-weight:400; line-height:1.25; color:var(--ink); }
+  .card-arr  { font-size:12px; font-weight:700; color:var(--accent); margin-top:2px; }
+  .card-tags { display:flex; gap:5px; margin-top:5px; flex-wrap:wrap; }
 
-  .tag { font-size:10px; font-weight:500; padding:2px 8px; border-radius:20px; background:var(--paper); border:1px solid var(--rule); color:var(--ink-soft); }
-  .tag-accent { background:var(--accent-lt); border-color:transparent; color:var(--accent-deep); }
-
-  .card-top { display:flex; flex-direction:column; gap:2px; }
-  .card-name { font-family:var(--serif); font-size:14px; font-weight:400; line-height:1.2; color:var(--ink); }
-  .card-arr  { font-size:11px; font-weight:700; color:var(--accent); }
-  .card-tags { display:none; }
-
-  /* PROGRESS inline */
-  .delivery-row { display:flex; justify-content:space-between; font-size:10px; color:var(--ink-soft); margin-bottom:3px; }
-  .progress-wrap { display:flex; align-items:center; gap:6px; margin-bottom:0; }
-  .progress-track { flex:1; height:4px; background:var(--rule); border-radius:2px; overflow:hidden; }
-  .progress-fill { height:100%; border-radius:2px; }
+  /* PROGRESS */
+  .delivery-row { display:flex; justify-content:space-between; font-size:10.5px; color:var(--ink-soft); margin-bottom:4px; }
+  .progress-wrap { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .progress-track { flex:1; height:5px; background:var(--rule); border-radius:3px; overflow:hidden; }
+  .progress-fill { height:100%; border-radius:3px; }
   .pf-green{background:var(--green)} .pf-amber{background:var(--amber)} .pf-red{background:var(--red)} .pf-accent{background:var(--accent)}
-  .progress-pct { font-size:10px; font-weight:700; color:var(--ink-soft); width:32px; text-align:right; white-space:nowrap; }
+  .progress-pct { font-size:11px; font-weight:700; color:var(--ink-soft); width:36px; text-align:right; white-space:nowrap; }
 
-  /* MINI METRICS inline */
-  .mini-legend { display:none; }
-  .mini-grid { display:flex; flex-direction:column; gap:2px; margin-bottom:0; }
-  .mini-cell { background:transparent; border:none; border-radius:0; padding:0; text-align:left; display:flex; align-items:center; gap:5px; }
-  .mini-pct { font-family:var(--sans); font-size:12px; font-weight:700; color:var(--ink-soft); line-height:1; min-width:34px; }
+  /* MINI METRICS */
+  .mini-legend { font-size:10px; color:var(--ink-soft); margin-bottom:5px; display:flex; align-items:center; gap:4px; }
+  .mini-legend-dot { width:6px; height:6px; border-radius:50%; background:var(--green); display:inline-block; }
+  .mini-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
+  .mini-cell { background:var(--paper); border:1px solid var(--rule); border-radius:8px; padding:10px 4px 8px; text-align:center; }
+  .mini-pct { font-family:var(--serif); font-size:18px; font-weight:400; color:var(--ink-soft); line-height:1; }
   .mini-pct-green { color:var(--green); } .mini-pct-amber { color:var(--amber); } .mini-pct-red { color:var(--red); }
-  .mini-sub { font-size:10px; color:var(--ink-soft); }
-  .mini-lbl { display:none; }
+  .mini-sub { font-size:10px; color:var(--ink-soft); margin-top:2px; }
+  .mini-lbl { font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); margin-top:4px; padding-top:4px; border-top:1px solid var(--rule); }
 
-  .card-priority { font-size:11.5px; color:var(--amber); font-weight:600; }
-  .card-priority-item { display:block; padding:1px 0; white-space:normal; word-break:break-word; line-height:1.4; }
-  .card-help { font-size:11.5px; color:var(--red); font-weight:600; margin-top:3px; }
+  .card-priority { font-size:12px; color:var(--amber); font-weight:600; }
+  .card-priority-item { display:block; padding:2px 0; white-space:normal; word-break:break-word; line-height:1.4; }
+  .card-help { font-size:12px; color:var(--red); font-weight:600; margin-top:6px; }
   .card-csm { display:none; }
 
   /* FOOTER */
@@ -203,32 +191,38 @@ const TESTIMONIALS = [
   },
 ];
 
-// --- CSV PARSER ---
-function parseCSVLine(line) {
-  // Proper CSV parser that handles quoted fields containing commas
-  const result = [];
-  let cur = "", inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if (ch === '"') { inQuotes = !inQuotes; }
-    else if (ch === ',' && !inQuotes) { result.push(cur.trim()); cur = ""; }
-    else { cur += ch; }
-  }
-  result.push(cur.trim());
-  return result;
-}
-
+// --- CSV PARSER — handles multi-line quoted cells properly ---
 function parseCSV(text) {
-  const rawLines = text.trim().split("\n");
-  const lines = rawLines.map(l => parseCSVLine(l));
+  // Step 1: split into fields respecting quoted multi-line cells
+  function tokenize(csv) {
+    const rows = [];
+    let row = [], cur = "", inQ = false;
+    for (let i = 0; i < csv.length; i++) {
+      const c = csv[i];
+      if (c === '"') {
+        if (inQ && csv[i+1] === '"') { cur += '"'; i++; } // escaped quote
+        else inQ = !inQ;
+      } else if (c === ',' && !inQ) {
+        row.push(cur.trim()); cur = "";
+      } else if ((c === '\n') && !inQ) {
+        row.push(cur.trim()); rows.push(row); row = []; cur = "";
+      } else if (c === '\r') {
+        // skip carriage returns
+      } else {
+        cur += c;
+      }
+    }
+    if (cur || row.length) { row.push(cur.trim()); rows.push(row); }
+    return rows;
+  }
 
-  // Find the header row — it contains "Customer Name"
+  const lines = tokenize(text);
+
+  // Step 2: find header row
   let headerIdx = lines.findIndex(r => r.some(c => c.toLowerCase().includes("customer name")));
   if (headerIdx < 0) return [];
 
   const headers = lines[headerIdx].map(h => h.toLowerCase().replace(/[^a-z0-9\s]/g,"").trim());
-
-  // Find column index by partial match
   const col = (...names) => {
     for (const name of names) {
       const idx = headers.findIndex(h => h.includes(name));
@@ -237,29 +231,15 @@ function parseCSV(text) {
     return -1;
   };
 
-  // Column indices based on actual sheet headers
   const C = {
-    name:      col("customer name"),
-    am:        col("am"),
-    csm:       col("csm"),
-    associate: col("associate"),
-    arr:       col("arr"),
-    channel:   col("channel"),
-    tier:      col("tier"),
-    stage:     col("stage"),
-    status:    col("status"),
-    commit:    col("delivery commit"),
-    delivered: col("delivered so far"),
-    usersTouched:   col("users touched"),
-    happyUsers:     col("happy users"),
-    userTest:       col("user testimonials"),
-    infTouched:     col("influencers touched"),
-    happyInf:       col("happy influencers"),
-    infTest:        col("influencer testimonials"),
-    sponsorTouched: col("sponsor touched"),
-    sponsorHappy:   col("sponsor happy"),
-    priority:       col("priority for next", "next 1 week", "priority"),
-    help:           col("help from"),
+    name:col("customer name"), am:col("am"), csm:col("csm"), associate:col("associate"),
+    arr:col("arr"), channel:col("channel"), tier:col("tier"), stage:col("stage"), status:col("status"),
+    commit:col("delivery commit"), delivered:col("delivered so far"),
+    usersTouched:col("users touched"), happyUsers:col("happy users"), userTest:col("user testimonials"),
+    infTouched:col("influencers touched"), happyInf:col("happy influencers"), infTest:col("influencer testimonials"),
+    sponsorTouched:col("sponsor touched"), sponsorHappy:col("sponsor happy"),
+    priority:col("priority for next","next 1 week","priority"),
+    help:col("help from"),
   };
 
   const rows = lines.slice(headerIdx + 1).filter(r =>
@@ -267,31 +247,18 @@ function parseCSV(text) {
   );
 
   return rows.map((r, i) => {
-    const g = idx => idx >= 0 && r[idx] ? r[idx].trim() : "";
-    const num = idx => {
-      const v = g(idx).replace(/[$,\s%]/g,"");
-      return v === "" || v === "-" || v === "N/A" ? 0 : parseFloat(v) || 0;
-    };
-    const clean = v => (!v || v === "N/A" || v === "-" || v === "") ? null : v;
-
+    const g = idx => idx >= 0 && r[idx] ? r[idx].replace(/\n/g," ").trim() : "";
+    const num = idx => { const v=g(idx).replace(/[$,\s%]/g,""); return v===""||v==="-"||v==="N/A"?0:parseFloat(v)||0; };
+    const clean = v => (!v||v==="N/A"||v==="-"||v==="") ? null : v;
     return {
-      id:        i + 1,
-      name:      g(C.name),
-      am:        g(C.am).replace(/\s+/g," "),
-      csm:       g(C.csm).replace(/\s+/g," "),
-      associate: g(C.associate).replace(/\s+/g," "),
-      arr:       num(C.arr),
-      channel:   g(C.channel) || "—",
-      tier:      g(C.tier) || "-",
-      stage:     g(C.stage) || "—",
-      status:    g(C.status) || "Happy",
-      commit:    num(C.commit) > 0 ? num(C.commit) : null,
-      delivered: num(C.delivered) > 0 ? num(C.delivered) : null,
-      users:   { reg: num(C.usersTouched), happy: num(C.happyUsers),  test: num(C.userTest) },
-      inf:     { reg: num(C.infTouched),   happy: num(C.happyInf),    test: num(C.infTest) },
-      sponsor: { touched: num(C.sponsorTouched), happy: num(C.sponsorHappy) },
-      priority: clean(g(C.priority)),
-      help:     clean(g(C.help)),
+      id:i+1, name:g(C.name), am:g(C.am).replace(/\s+/g," "), csm:g(C.csm).replace(/\s+/g," "),
+      associate:g(C.associate).replace(/\s+/g," "), arr:num(C.arr),
+      channel:g(C.channel)||"—", tier:g(C.tier)||"-", stage:g(C.stage)||"—", status:g(C.status)||"Happy",
+      commit:num(C.commit)>0?num(C.commit):null, delivered:num(C.delivered)>0?num(C.delivered):null,
+      users:{reg:num(C.usersTouched),happy:num(C.happyUsers),test:num(C.userTest)},
+      inf:{reg:num(C.infTouched),happy:num(C.happyInf),test:num(C.infTest)},
+      sponsor:{touched:num(C.sponsorTouched),happy:num(C.sponsorHappy)},
+      priority:clean(g(C.priority)), help:clean(g(C.help)),
     };
   });
 }
@@ -333,58 +300,46 @@ function AccountCard({ a, onClick }) {
 
   return (
     <div className={`account-card ${borderCls}`} onClick={()=>onClick(a)}>
-      {/* Account name + ARR */}
       <div className="card-top">
-        <div className="card-name">{a.name}</div>
-        <div className="card-arr">{fmtARR(a.arr)}</div>
+        <div>
+          <div className="card-name">{a.name}</div>
+          <div className="card-arr">{fmtARR(a.arr)}</div>
+          <div className="card-tags">
+            <span className="tag">{a.channel}</span>
+            {a.tier&&a.tier!=="-"&&<span className="tag">{a.tier}</span>}
+          </div>
+        </div>
+        <Pill status={a.status}/>
       </div>
-
-      {/* Status */}
-      <Pill status={a.status}/>
-
-      {/* Channel */}
-      <span style={{fontSize:11,color:"var(--ink-soft)"}}>{a.channel}</span>
-
-      {/* Delivery progress */}
       <ProgressBar commit={a.commit} delivered={a.delivered}/>
-
-      {/* Users */}
+      <div className="mini-legend"><span className="mini-legend-dot"/><span>% = Happy</span></div>
       <div className="mini-grid">
         <div className="mini-cell">
           <div className={pctCls(userPct)}>{userPct!==null?`${userPct}%`:"—"}</div>
           <div className="mini-sub">{a.users.reg} touched</div>
+          <div className="mini-lbl">Users</div>
         </div>
-      </div>
-
-      {/* Influencers */}
-      <div className="mini-grid">
         <div className="mini-cell">
           <div className={pctCls(infPct)}>{infPct!==null?`${infPct}%`:"—"}</div>
           <div className="mini-sub">{a.inf.reg} touched</div>
+          <div className="mini-lbl">Influencers</div>
         </div>
-      </div>
-
-      {/* Sponsor */}
-      <div className="mini-grid">
         <div className="mini-cell">
           <div className={pctCls(sponsorPct)}>{sponsorPct!==null?`${sponsorPct}%`:"—"}</div>
           <div className="mini-sub">{a.sponsor.touched>0?`${a.sponsor.happy}/${a.sponsor.touched}`:"none"}</div>
+          <div className="mini-lbl">Sponsor</div>
         </div>
       </div>
-
-      {/* Priority + LT */}
-      <div>
-        {priorityLines.length>0&&(
-          <div className="card-priority">
-            {priorityLines.map((line,i)=><span key={i} className="card-priority-item">↗ {line}</span>)}
-          </div>
-        )}
-        {helpLines.length>0&&(
-          <div className="card-help">
-            {helpLines.map((line,i)=><span key={i} className="card-priority-item">● LT: {line}</span>)}
-          </div>
-        )}
-      </div>
+      {priorityLines.length>0&&(
+        <div className="card-priority">
+          {priorityLines.map((line,i)=><span key={i} className="card-priority-item">↗ {line}</span>)}
+        </div>
+      )}
+      {helpLines.length>0&&(
+        <div className="card-help">
+          {helpLines.map((line,i)=><span key={i} className="card-priority-item">● LT: {line}</span>)}
+        </div>
+      )}
     </div>
   );
 }
@@ -502,9 +457,11 @@ function App() {
   const [search, setSearch]     = useState("");
   const [selected, setSelected] = useState(null);
 
-  // Parse tab-separated data (copied from Google Sheets)
+  // Parse tab-separated data (copied from Google Sheets) — also handles newlines in cells
   function parseTSV(text) {
-    const lines = text.trim().split("\n").map(l => l.split("\t").map(c => c.trim()));
+    // Google Sheets paste uses \t between columns and \n between rows
+    // Multi-line cells come through as literal newlines within a cell — we collapse them
+    const lines = text.trim().split("\n").map(l => l.split("\t").map(c => c.replace(/\r/g,"").trim()));
     let headerIdx = lines.findIndex(r => r.some(c => c.toLowerCase().includes("customer name")));
     if (headerIdx < 0) return null;
     const headers = lines[headerIdx].map(h => h.toLowerCase().replace(/[^a-z0-9\s]/g,"").trim());
@@ -521,7 +478,7 @@ function App() {
     const rows = lines.slice(headerIdx+1).filter(r => C.name>=0 && r[C.name] && r[C.name].trim() !== "" && r[C.name].trim() !== "-");
     if (rows.length === 0) return null;
     return rows.map((r,i) => {
-      const g = idx => idx>=0 && r[idx] ? r[idx].trim() : "";
+      const g = idx => idx>=0 && r[idx] ? r[idx].replace(/\n/g," ").trim() : "";
       const num = idx => { const v=g(idx).replace(/[$,\s%]/g,""); return v===""||v==="-"||v==="N/A"?0:parseFloat(v)||0; };
       const clean = v => (!v||v==="N/A"||v==="-"||v==="") ? null : v;
       return {
@@ -694,11 +651,6 @@ function App() {
           <span className="filter-results">{filtered.length} of {data.length} accounts</span>
         </div>
 
-        <div className="row-header">
-          {["Account","ARR","Status","Channel","Delivery","% Users Happy","% Inf Happy","% Sponsor Happy","Priority & LT Help"].map((h,i)=>(
-            <div key={i} className="row-header-cell">{h}</div>
-          ))}
-        </div>
         <div className="account-grid">
           {filtered.map(a=><AccountCard key={a.id} a={a} onClick={setSelected}/>)}
         </div>
