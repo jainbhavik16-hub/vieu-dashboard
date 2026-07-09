@@ -3,171 +3,155 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Customer Delivery & Happiness · CEO Sync</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>vieu · Customer Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Share:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <style>
-  :root {
-    --ink:#1A1818; --ink-mid:#3D3A3A; --ink-soft:#7A7575;
-    --rule:#E2DFDC; --paper:#F8F6F3; --white:#FFFFFF;
-    --accent:#7744FF; --accent-lt:#EDE8FF; --accent-deep:#5A2FD6;
-    --red:#C0392B; --red-lt:#FBE9E7;
-    --green:#1D7A4A; --green-lt:#E9F6EF;
-    --amber:#9A6A14; --amber-lt:#FFF1D6;
-    --serif:'Share',Georgia,serif;
-    --sans:'Share',system-ui,sans-serif;
-    --max:1280px;
-  }
-  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-  html { scroll-behavior:smooth; }
-  body { font-family:var(--sans); background:var(--paper); color:var(--ink); line-height:1.6; -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden; }
-
-  /* NAV */
-  .nav { position:sticky; top:0; z-index:50; background:rgba(248,246,243,.95); backdrop-filter:blur(10px); border-bottom:1px solid var(--rule); }
-  .nav-in { max-width:var(--max); margin:0 auto; padding:12px 28px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
-  .brand { font-weight:700; font-size:15px; }
-  .brand b { color:var(--accent); }
-  .nav-right { display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
-  .week-badge { font-size:11px; font-weight:600; color:var(--ink-soft); background:var(--white); border:1px solid var(--rule); padding:5px 12px; border-radius:30px; white-space:nowrap; }
-  .search-input { font-family:var(--sans); font-size:12px; background:var(--white); border:1px solid var(--rule); color:var(--ink); padding:6px 14px; border-radius:30px; outline:none; width:160px; }
-  .search-input::placeholder { color:var(--ink-soft); }
-  .search-input:focus { border-color:var(--accent); }
-  .refresh-btn { font-family:var(--sans); font-size:12px; font-weight:700; color:var(--accent); background:var(--accent-lt); border:1px solid var(--accent); padding:6px 14px; border-radius:30px; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all .15s; white-space:nowrap; }
-  .refresh-btn:hover { background:var(--accent); color:#fff; }
-  .refresh-btn:disabled { opacity:0.5; cursor:not-allowed; }
-  .refresh-btn.spinning .spin-icon { display:inline-block; animation:spin .7s linear infinite; }
-  @keyframes spin { to { transform:rotate(360deg); } }
-  .last-updated { font-size:10.5px; color:var(--ink-soft); white-space:nowrap; }
-
-  /* LOADING / ERROR */
-  .loading-screen { max-width:var(--max); margin:80px auto; padding:0 28px; text-align:center; }
-  .loading-spinner { width:40px; height:40px; border:3px solid var(--rule); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 16px; }
-  .loading-text { font-size:14px; color:var(--ink-soft); }
-  .error-box { background:var(--red-lt); border:1px solid #f0c4bf; border-radius:12px; padding:20px 24px; max-width:500px; margin:0 auto; }
-  .error-box h3 { color:var(--red); font-size:15px; margin-bottom:8px; }
-  .error-box p { font-size:13px; color:var(--ink-soft); line-height:1.5; }
-
-  /* MAIN */
-  .main { max-width:var(--max); margin:0 auto; padding:28px 28px 60px; display:flex; flex-direction:column; gap:24px; }
-
-  /* SUMMARY */
-  .eyebrow { font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
-  .stat-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:10px; }
-  .stat-card { background:var(--white); border:1px solid var(--rule); border-radius:12px; padding:14px 16px; }
-  .stat-label { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:5px; }
-  .stat-value { font-family:var(--serif); font-size:26px; font-weight:400; line-height:1; }
-  .stat-sub { font-size:10.5px; color:var(--ink-soft); margin-top:4px; }
-  .sv-accent{color:var(--accent)} .sv-green{color:var(--green)} .sv-amber{color:var(--amber)} .sv-red{color:var(--red)} .sv-ink{color:var(--ink)}
-
-  /* LT BANNER */
-  .lt-banner { background:var(--red-lt); border:1px solid #f0c4bf; border-radius:12px; padding:12px 18px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-  .lt-label { font-size:13px; font-weight:700; color:var(--red); white-space:nowrap; }
-  .lt-chip { font-family:var(--sans); font-size:11px; font-weight:600; background:var(--white); border:1px solid #f0c4bf; color:var(--red); padding:4px 12px; border-radius:30px; cursor:pointer; transition:all .15s; }
-  .lt-chip:hover { background:var(--red); color:#fff; border-color:var(--red); }
-
-  /* FILTER BAR */
-  .filter-bar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; background:var(--white); border:1px solid var(--rule); border-radius:12px; padding:11px 16px; }
-  .filter-bar-label { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); white-space:nowrap; }
-  .filter-divider { width:1px; height:18px; background:var(--rule); margin:0 2px; flex-shrink:0; }
-  .filter-group { display:flex; align-items:center; gap:5px; }
-  .filter-group-label { font-size:10.5px; font-weight:600; color:var(--ink-soft); white-space:nowrap; }
-  .filter-select { font-family:var(--sans); font-size:11.5px; font-weight:600; color:var(--ink); background:var(--paper); border:1px solid var(--rule); border-radius:20px; padding:4px 26px 4px 11px; outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A7575' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 9px center; transition:all .15s; }
-  .filter-select:hover { border-color:var(--accent); }
-  .filter-select.active { background-color:var(--accent-lt); border-color:var(--accent); color:var(--accent-deep); }
-  .filter-clear { font-family:var(--sans); font-size:11px; font-weight:600; color:var(--ink-soft); background:transparent; border:none; cursor:pointer; padding:4px 8px; border-radius:20px; transition:all .15s; }
-  .filter-clear:hover { color:var(--accent); background:var(--accent-lt); }
-  .filter-results { margin-left:auto; font-size:11px; color:var(--ink-soft); white-space:nowrap; }
-
-  /* ACCOUNT GRID */
-  .account-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-  .account-card { background:var(--white); border:1px solid var(--rule); border-radius:12px; padding:18px; cursor:pointer; transition:all .18s; min-width:0; display:block; }
-  .account-card:hover { border-color:var(--accent); box-shadow:0 6px 22px rgba(119,68,255,.09); transform:translateY(-2px); }
-  .account-card.border-risk    { border-left:3px solid var(--amber); }
-  .account-card.border-unhappy { border-left:3px solid var(--red); }
-  .account-card.border-churned { border-left:3px solid var(--red); }
-
-  .row-header { display:none; }
-
-  .card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:12px; }
-  .card-name { font-family:var(--serif); font-size:15px; font-weight:400; line-height:1.25; color:var(--ink); }
-  .card-arr  { font-size:12px; font-weight:700; color:var(--accent); margin-top:2px; }
-  .card-tags { display:flex; gap:5px; margin-top:5px; flex-wrap:wrap; }
-
-  /* PROGRESS */
-  .delivery-row { display:flex; justify-content:space-between; font-size:10.5px; color:var(--ink-soft); margin-bottom:4px; }
-  .progress-wrap { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
-  .progress-track { flex:1; height:5px; background:var(--rule); border-radius:3px; overflow:hidden; }
-  .progress-fill { height:100%; border-radius:3px; }
-  .pf-green{background:var(--green)} .pf-amber{background:var(--amber)} .pf-red{background:var(--red)} .pf-accent{background:var(--accent)}
-  .progress-pct { font-size:11px; font-weight:700; color:var(--ink-soft); width:36px; text-align:right; white-space:nowrap; }
-
-  /* MINI METRICS */
-  .mini-legend { font-size:10px; color:var(--ink-soft); margin-bottom:5px; display:flex; align-items:center; gap:4px; }
-  .mini-legend-dot { width:6px; height:6px; border-radius:50%; background:var(--green); display:inline-block; }
-  .mini-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
-  .mini-cell { background:var(--paper); border:1px solid var(--rule); border-radius:8px; padding:10px 4px 8px; text-align:center; }
-  .mini-pct { font-family:var(--serif); font-size:18px; font-weight:400; color:var(--ink-soft); line-height:1; }
-  .mini-pct-green { color:var(--green); } .mini-pct-amber { color:var(--amber); } .mini-pct-red { color:var(--red); }
-  .mini-sub { font-size:10px; color:var(--ink-soft); margin-top:2px; }
-  .mini-lbl { font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); margin-top:4px; padding-top:4px; border-top:1px solid var(--rule); }
-
-  .card-priority { font-size:12px; color:var(--amber); font-weight:600; }
-  .card-priority-item { display:block; padding:2px 0; white-space:normal; word-break:break-word; line-height:1.4; }
-  .card-help { font-size:12px; color:var(--red); font-weight:600; margin-top:6px; }
-  .card-csm { display:none; }
-
-  /* FOOTER */
-  .page-footer { border-top:1px solid var(--rule); padding-top:14px; display:flex; justify-content:space-between; font-size:11.5px; color:var(--ink-soft); flex-wrap:wrap; gap:8px; }
-
-  /* MODAL */
-  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(26,24,24,0.55); z-index:50; align-items:center; justify-content:center; padding:24px; }
-  .modal-overlay.open { display:flex; }
-  .modal-box { background:var(--white); border:1px solid var(--rule); border-radius:16px; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 80px rgba(0,0,0,.14); }
-  .modal-header { padding:20px 22px 14px; border-bottom:1px solid var(--rule); display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
-  .modal-name { font-family:var(--serif); font-size:20px; font-weight:400; line-height:1.2; }
-  .modal-meta-row { display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap; }
-  .modal-arr { font-size:13px; font-weight:700; color:var(--accent); }
-  .close-btn { font-family:var(--sans); width:28px; height:28px; border-radius:50%; background:var(--paper); border:1px solid var(--rule); color:var(--ink-soft); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .close-btn:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
-  .modal-body { padding:18px 22px; display:flex; flex-direction:column; gap:16px; }
-  .modal-sec-title { font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; padding-bottom:5px; border-bottom:1px solid var(--rule); }
-  .modal-3grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
-  .modal-2grid { display:grid; grid-template-columns:repeat(2,1fr); gap:7px; }
-  .modal-cell { background:var(--paper); border:1px solid var(--rule); border-radius:10px; padding:10px; text-align:center; }
-  .modal-cell-val { font-family:var(--serif); font-size:18px; font-weight:400; }
-  .modal-cell-lbl { font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-top:2px; }
-  .priority-box { background:var(--amber-lt); border:1px solid #e8d0a0; border-radius:10px; padding:11px 13px; }
-  .priority-box .lbl { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--amber); margin-bottom:4px; }
-  .priority-box .val { font-size:13px; color:var(--ink); font-weight:500; line-height:1.5; }
-  .priority-line { display:block; }
-  .help-box { border-radius:10px; padding:11px 13px; }
-  .help-box.needed { background:var(--red-lt); border:1px solid #f0c4bf; }
-  .help-box.none   { background:var(--paper); border:1px solid var(--rule); }
-  .help-box .lbl { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px; }
-  .help-box.needed .lbl { color:var(--red); } .help-box.none .lbl { color:var(--ink-soft); }
-  .help-box .val { font-size:13px; font-weight:600; }
-  .help-box.needed .val { color:var(--red); } .help-box.none .val { color:var(--ink-soft); font-style:italic; }
-  .na-val { color:var(--ink-soft); font-style:italic; font-size:13px; }
-
-  .empty-state { text-align:center; padding:60px 28px; color:var(--ink-soft); font-size:14px; }
-
-  /* TESTIMONIALS */
-  .testimonials-section { background:#16172B; border-radius:16px; padding:26px 26px 22px; }
-  .testimonials-eyebrow { font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:#9B82FF; margin-bottom:16px; }
-  .testimonials-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:14px; }
-  .tcard { background:#1E2040; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px 20px 16px; display:flex; flex-direction:column; gap:14px; position:relative; overflow:hidden; }
-  .tcard::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#7744FF,#9B82FF); }
-  .tcard-quote { font-family:var(--serif); font-size:14px; line-height:1.65; color:rgba(255,255,255,0.88); font-style:italic; }
-  .tcard-quote em { font-style:normal; color:#9B82FF; }
-  .tcard-person { display:flex; align-items:center; gap:12px; border-top:1px solid rgba(255,255,255,0.08); padding-top:13px; }
-  .tcard-avatar { width:40px; height:40px; border-radius:50%; background:rgba(119,68,255,0.3); border:2px solid rgba(119,68,255,0.4); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-size:15px; font-weight:700; color:#9B82FF; flex-shrink:0; }
-  .tcard-name { font-size:13px; font-weight:700; color:#fff; }
-  .tcard-title { font-size:11px; color:rgba(255,255,255,0.45); margin-top:2px; }
-  .tcard-account { display:inline-block; margin-top:5px; font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; background:rgba(119,68,255,0.2); border:1px solid rgba(119,68,255,0.3); color:#9B82FF; padding:2px 8px; border-radius:10px; }
+:root {
+  --ink:#1A1818; --ink-soft:#7A7575; --rule:#E2DFDC; --paper:#F8F6F3; --white:#FFF;
+  --accent:#7744FF; --accent-lt:#EDE8FF; --accent-deep:#5A2FD6;
+  --red:#C0392B; --red-lt:#FBE9E7; --green:#1D7A4A; --green-lt:#E9F6EF;
+  --amber:#9A6A14; --amber-lt:#FFF1D6;
+  --serif:'Share',Georgia,serif; --sans:'Share',system-ui,sans-serif; --max:1280px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:rgba(248,246,243,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);}
+.nav-in{max-width:var(--max);margin:0 auto;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.brand{font-weight:700;font-size:15px;} .brand b{color:var(--accent);}
+.nav-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.week-badge{font-size:11px;font-weight:600;color:var(--ink-soft);background:var(--white);border:1px solid var(--rule);padding:5px 12px;border-radius:30px;}
+.search-input{font-family:var(--sans);font-size:12px;background:var(--white);border:1px solid var(--rule);color:var(--ink);padding:6px 14px;border-radius:30px;outline:none;width:160px;}
+.search-input:focus{border-color:var(--accent);}
+.search-input::placeholder{color:var(--ink-soft);}
+.upd-btn{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-lt);border:1px solid var(--accent);padding:6px 14px;border-radius:30px;cursor:pointer;white-space:nowrap;}
+.upd-btn:hover{background:var(--accent);color:#fff;}
+.last-upd{font-size:11px;color:var(--ink-soft);}
+/* MAIN */
+.main{max-width:var(--max);margin:0 auto;padding:28px 28px 60px;display:flex;flex-direction:column;gap:24px;}
+/* STATS */
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.stat-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
+.stat-card{background:var(--white);border:1px solid var(--rule);border-radius:12px;padding:14px 16px;}
+.stat-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:5px;}
+.stat-value{font-family:var(--serif);font-size:26px;font-weight:400;line-height:1;}
+.stat-sub{font-size:10.5px;color:var(--ink-soft);margin-top:4px;}
+.sv-a{color:var(--accent);} .sv-g{color:var(--green);} .sv-r{color:var(--red);} .sv-b{color:var(--amber);}
+/* LT BANNER */
+.lt-banner{background:var(--red-lt);border:1px solid #f0c4bf;border-radius:12px;padding:12px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.lt-label{font-size:13px;font-weight:700;color:var(--red);white-space:nowrap;}
+.lt-chip{font-family:var(--sans);font-size:11px;font-weight:600;background:var(--white);border:1px solid #f0c4bf;color:var(--red);padding:4px 12px;border-radius:30px;cursor:pointer;}
+.lt-chip:hover{background:var(--red);color:#fff;border-color:var(--red);}
+/* FILTER */
+.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--white);border:1px solid var(--rule);border-radius:12px;padding:11px 16px;}
+.fb-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
+.fb-div{width:1px;height:18px;background:var(--rule);flex-shrink:0;}
+.fg{display:flex;align-items:center;gap:5px;}
+.fg-label{font-size:10.5px;font-weight:600;color:var(--ink-soft);}
+.fsel{font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:20px;padding:4px 26px 4px 11px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A7575' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;}
+.fsel:hover{border-color:var(--accent);}
+.fsel.on{background-color:var(--accent-lt);border-color:var(--accent);color:var(--accent-deep);}
+.f-clear{font-family:var(--sans);font-size:11px;font-weight:600;color:var(--ink-soft);background:transparent;border:none;cursor:pointer;padding:4px 8px;border-radius:20px;}
+.f-clear:hover{color:var(--accent);background:var(--accent-lt);}
+.f-count{margin-left:auto;font-size:11px;color:var(--ink-soft);}
+/* CARDS */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.card{background:var(--white);border:1px solid var(--rule);border-radius:12px;padding:18px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;}
+.card:hover{border-color:var(--accent);box-shadow:0 6px 22px rgba(119,68,255,.09);transform:translateY(-2px);}
+.card.c-risk{border-left:3px solid var(--amber);}
+.card.c-unhappy{border-left:3px solid var(--red);}
+.card.c-churned{border-left:3px solid var(--red);}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:12px;}
+.card-name{font-family:var(--serif);font-size:15px;font-weight:400;line-height:1.25;color:var(--ink);}
+.card-arr{font-size:12px;font-weight:700;color:var(--accent);margin-top:2px;}
+.card-tags{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;}
+.tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--paper);border:1px solid var(--rule);color:var(--ink-soft);}
+/* PILL */
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.p-happy{background:var(--green-lt);color:var(--green);}
+.p-risk{background:var(--amber-lt);color:var(--amber);}
+.p-unhappy,.p-churned{background:var(--red-lt);color:var(--red);}
+.pdot{width:5px;height:5px;border-radius:50%;display:inline-block;}
+.pd-happy{background:var(--green);} .pd-risk{background:var(--amber);} .pd-unhappy,.pd-churned{background:var(--red);}
+/* DELIVERY */
+.del-row{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink-soft);margin-bottom:4px;}
+.del-wrap{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.del-track{flex:1;height:5px;background:var(--rule);border-radius:3px;overflow:hidden;}
+.del-fill{height:100%;border-radius:3px;}
+.df-g{background:var(--green);} .df-a{background:var(--amber);} .df-r{background:var(--red);} .df-p{background:var(--accent);}
+.del-pct{font-size:11px;font-weight:700;color:var(--ink-soft);width:36px;text-align:right;white-space:nowrap;}
+/* METRICS */
+.met-legend{font-size:10px;color:var(--ink-soft);margin-bottom:5px;display:flex;align-items:center;gap:4px;}
+.met-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;}
+.met-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.met-cell{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:10px 4px 8px;text-align:center;}
+.met-pct{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--ink-soft);line-height:1;}
+.m-g{color:var(--green);} .m-a{color:var(--amber);} .m-r{color:var(--red);}
+.met-sub{font-size:10px;color:var(--ink-soft);margin-top:2px;}
+.met-lbl{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;padding-top:4px;border-top:1px solid var(--rule);}
+/* PRIORITY */
+.pri{font-size:12px;color:var(--amber);font-weight:600;}
+.pri-line{display:block;padding:2px 0;line-height:1.4;word-break:break-word;}
+.help{font-size:12px;color:var(--red);font-weight:600;margin-top:6px;}
+/* TESTIMONIALS */
+.testi{background:#16172B;border-radius:16px;padding:26px;}
+.testi-eye{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#9B82FF;margin-bottom:16px;}
+.tcard{background:#1E2040;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px 20px 16px;position:relative;overflow:hidden;}
+.tcard::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7744FF,#9B82FF);}
+.tcard-quote{font-family:var(--serif);font-size:14px;line-height:1.7;color:rgba(255,255,255,.88);font-style:italic;margin-bottom:16px;}
+.tcard-quote em{font-style:normal;color:#9B82FF;}
+.tcard-person{display:flex;align-items:center;gap:12px;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;}
+.tcard-av{width:40px;height:40px;border-radius:50%;background:rgba(119,68,255,.3);border:2px solid rgba(119,68,255,.4);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:14px;font-weight:700;color:#9B82FF;flex-shrink:0;}
+.tcard-name{font-size:13px;font-weight:700;color:#fff;}
+.tcard-title{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px;}
+.tcard-co{display:inline-block;margin-top:5px;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:rgba(119,68,255,.2);border:1px solid rgba(119,68,255,.3);color:#9B82FF;padding:2px 8px;border-radius:10px;}
+/* MODAL */
+.mo{display:none;position:fixed;inset:0;background:rgba(26,24,24,.55);z-index:50;align-items:center;justify-content:center;padding:24px;}
+.mo.open{display:flex;}
+.mb{background:var(--white);border:1px solid var(--rule);border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.14);}
+.mh{padding:20px 22px 14px;border-bottom:1px solid var(--rule);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.mh-name{font-family:var(--serif);font-size:20px;font-weight:400;}
+.mh-meta{display:flex;align-items:center;gap:8px;margin-top:5px;flex-wrap:wrap;}
+.mh-arr{font-size:13px;font-weight:700;color:var(--accent);}
+.close-btn{width:28px;height:28px;border-radius:50%;background:var(--paper);border:1px solid var(--rule);color:var(--ink-soft);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.close-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+.mbd{padding:18px 22px;display:flex;flex-direction:column;gap:16px;}
+.ms-title{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--rule);}
+.m3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.m2{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;}
+.mc{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:10px;text-align:center;}
+.mc-val{font-family:var(--serif);font-size:18px;font-weight:400;}
+.mc-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px;}
+.pbox{background:var(--amber-lt);border:1px solid #e8d0a0;border-radius:10px;padding:11px 13px;}
+.pbox .lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:4px;}
+.pbox .val{font-size:13px;color:var(--ink);font-weight:500;line-height:1.5;}
+.hbox{border-radius:10px;padding:11px 13px;}
+.hbox.on{background:var(--red-lt);border:1px solid #f0c4bf;}
+.hbox.off{background:var(--paper);border:1px solid var(--rule);}
+.hbox .lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.hbox.on .lbl{color:var(--red);} .hbox.off .lbl{color:var(--ink-soft);}
+.hbox .val{font-size:13px;font-weight:600;}
+.hbox.on .val{color:var(--red);} .hbox.off .val{color:var(--ink-soft);font-style:italic;}
+/* PASTE SCREEN */
+.paste-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 24px;background:var(--paper);}
+.paste-box{width:100%;max-width:540px;background:var(--white);border:1px solid var(--rule);border-radius:16px;padding:28px;}
+.paste-title{font-family:var(--serif);font-size:24px;font-weight:400;color:var(--ink);margin-bottom:4px;text-align:center;}
+.paste-title b{color:var(--accent);}
+.paste-sub{font-size:13px;color:var(--ink-soft);text-align:center;margin-bottom:24px;}
+.paste-step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start;}
+.paste-num{width:22px;height:22px;border-radius:50%;background:var(--accent-lt);color:var(--accent);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.paste-text-lbl{font-size:13px;color:var(--ink);}
+.paste-ta{width:100%;margin-top:16px;height:100px;font-family:var(--sans);font-size:12px;padding:10px 12px;border:1px solid var(--rule);border-radius:10px;outline:none;resize:vertical;background:var(--paper);color:var(--ink);}
+.paste-ta:focus{border-color:var(--accent);}
+.paste-err{color:var(--red);font-size:12px;margin-top:8px;}
+.paste-btn{margin-top:14px;width:100%;font-family:var(--sans);font-size:13px;font-weight:700;color:#fff;border:none;border-radius:30px;padding:11px 0;cursor:pointer;transition:background .15s;}
+/* FOOTER */
+.footer{border-top:1px solid var(--rule);padding-top:14px;display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);flex-wrap:wrap;gap:8px;}
+.empty{text-align:center;padding:60px;color:var(--ink-soft);font-size:14px;}
+@keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
@@ -176,131 +160,111 @@
 const { useState } = React;
 
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpwVZC8gtTcXjuFKfzDK4GQgL49VuN2Oq3C7B4Byi_mGqBEze_qlQvC42Dr_16qn-C9uize7O-CVZy/pub?gid=1916327488&single=true&output=csv";
-const CSV_URL = SHEET_URL;
 
-const TESTIMONIALS = [
-  {
-    id:1,
-    quote: "What impressed me most about Vieu was how it surfaced the information I actually needed, without me having to dig for it. Seeing warm paths into my actual target accounts, stakeholder insights, org charts, and key buying signals all in one place was genuinely exciting.",
-    highlight: "It's the kind of intelligence that helps you spend less time researching and more time creating pipeline. I'm looking forward to making Vieu part of my day-to-day workflow.",
-    tail: "",
-    name: "Justin Anderson",
-    title: "Healthcare Enterprise Account Executive",
-    company: "Rubrik",
-    initials: "JA",
-  },
-];
+const TESTIMONIALS = [{
+  id:1,
+  quote:"What impressed me most about Vieu was how it surfaced the information I actually needed, without me having to dig for it. Seeing warm paths into my actual target accounts, stakeholder insights, org charts, and key buying signals all in one place was genuinely exciting.",
+  highlight:"It's the kind of intelligence that helps you spend less time researching and more time creating pipeline. I'm looking forward to making Vieu part of my day-to-day workflow.",
+  name:"Justin Anderson", title:"Healthcare Enterprise Account Executive", company:"Rubrik", initials:"JA",
+}];
 
-// --- CSV PARSER — handles multi-line quoted cells properly ---
+// ── CSV PARSER (handles quoted multi-line cells) ──
 function parseCSV(text) {
-  // Step 1: split into fields respecting quoted multi-line cells
-  function tokenize(csv) {
-    const rows = [];
-    let row = [], cur = "", inQ = false;
-    for (let i = 0; i < csv.length; i++) {
-      const c = csv[i];
-      if (c === '"') {
-        if (inQ && csv[i+1] === '"') { cur += '"'; i++; } // escaped quote
-        else inQ = !inQ;
-      } else if (c === ',' && !inQ) {
-        row.push(cur.trim()); cur = "";
-      } else if ((c === '\n') && !inQ) {
-        row.push(cur.trim()); rows.push(row); row = []; cur = "";
-      } else if (c === '\r') {
-        // skip carriage returns
-      } else {
-        cur += c;
-      }
-    }
-    if (cur || row.length) { row.push(cur.trim()); rows.push(row); }
-    return rows;
+  // Tokenise respecting RFC 4180 quoted fields
+  const rows = [];
+  let row=[], cur="", inQ=false;
+  for (let i=0;i<text.length;i++) {
+    const c=text[i];
+    if (c==='"') { if(inQ&&text[i+1]==='"'){cur+='"';i++;} else inQ=!inQ; }
+    else if (c===','&&!inQ) { row.push(cur.trim()); cur=""; }
+    else if (c==='\n'&&!inQ) { row.push(cur.trim()); rows.push(row); row=[]; cur=""; }
+    else if (c!=='\r') cur+=c;
   }
+  if (cur||row.length) { row.push(cur.trim()); rows.push(row); }
 
-  const lines = tokenize(text);
-
-  // Step 2: find header row
-  let headerIdx = lines.findIndex(r => r.some(c => c.toLowerCase().includes("customer name")));
-  if (headerIdx < 0) return [];
-
-  const headers = lines[headerIdx].map(h => h.toLowerCase().replace(/[^a-z0-9\s]/g,"").trim());
-  const col = (...names) => {
-    for (const name of names) {
-      const idx = headers.findIndex(h => h.includes(name));
-      if (idx >= 0) return idx;
-    }
-    return -1;
-  };
-
-  const C = {
-    name:col("customer name"), am:col("am"), csm:col("csm"), associate:col("associate"),
-    arr:col("arr"), channel:col("channel"), tier:col("tier"), stage:col("stage"), status:col("status"),
-    commit:col("delivery commit"), delivered:col("delivered so far"),
-    usersTouched:col("users touched"), happyUsers:col("happy users"), userTest:col("user testimonials"),
-    infTouched:col("influencers touched"), happyInf:col("happy influencers"), infTest:col("influencer testimonials"),
-    sponsorTouched:col("sponsor touched"), sponsorHappy:col("sponsor happy"),
-    priority:col("priority for next","next 1 week","priority"),
+  const hi = rows.findIndex(r=>r.some(c=>c.toLowerCase().includes("customer name")));
+  if (hi<0) return [];
+  const H = rows[hi].map(h=>h.toLowerCase().replace(/[^a-z0-9 ]/g,"").trim());
+  const col=(...ns)=>{ for(const n of ns){const i=H.findIndex(h=>h.includes(n));if(i>=0)return i;} return -1; };
+  const C={
+    name:col("customer name"),am:col(" am"),csm:col("csm"),associate:col("associate"),
+    arr:col("arr"),channel:col("channel"),tier:col("tier"),stage:col("stage"),status:col("status"),
+    commit:col("delivery commit"),delivered:col("delivered so far"),
+    ut:col("users touched"),uh:col("happy users"),utest:col("user testimonials"),
+    it:col("influencers touched"),ih:col("happy influencers"),itest:col("influencer testimonials"),
+    st:col("sponsor touched"),sh:col("sponsor happy"),
+    pri:col("priority for next","next 1 week","priority"),
     help:col("help from"),
   };
+  // fallback for "am" — often first col or titled just "am"
+  if(C.am<0) C.am=col("^am$","\\bam\\b","am");
 
-  const rows = lines.slice(headerIdx + 1).filter(r =>
-    C.name >= 0 && r[C.name] && r[C.name].trim() !== "" && r[C.name].trim() !== "-"
-  );
-
-  return rows.map((r, i) => {
-    const g = idx => idx >= 0 && r[idx] ? r[idx].replace(/\n/g," ").trim() : "";
-    const num = idx => { const v=g(idx).replace(/[$,\s%]/g,""); return v===""||v==="-"||v==="N/A"?0:parseFloat(v)||0; };
-    const clean = v => (!v||v==="N/A"||v==="-"||v==="") ? null : v;
-    return {
-      id:i+1, name:g(C.name), am:g(C.am).replace(/\s+/g," "), csm:g(C.csm).replace(/\s+/g," "),
-      associate:g(C.associate).replace(/\s+/g," "), arr:num(C.arr),
-      channel:g(C.channel)||"—", tier:g(C.tier)||"-", stage:g(C.stage)||"—", status:g(C.status)||"Happy",
-      commit:num(C.commit)>0?num(C.commit):null, delivered:num(C.delivered)>0?num(C.delivered):null,
-      users:{reg:num(C.usersTouched),happy:num(C.happyUsers),test:num(C.userTest)},
-      inf:{reg:num(C.infTouched),happy:num(C.happyInf),test:num(C.infTest)},
-      sponsor:{touched:num(C.sponsorTouched),happy:num(C.sponsorHappy)},
-      priority:clean(g(C.priority)), help:clean(g(C.help)),
-    };
-  });
+  return rows.slice(hi+1)
+    .filter(r=>C.name>=0&&r[C.name]&&r[C.name].trim()&&r[C.name].trim()!=="-")
+    .map((r,i)=>{
+      const g=k=>k>=0&&r[k]?r[k].replace(/\n/g," ").trim():"";
+      const n=k=>{const v=g(k).replace(/[$, %]/g,"");return v===""||v==="-"||v.toUpperCase()==="N/A"?0:parseFloat(v)||0;};
+      const cl=v=>(!v||v==="-"||v.toUpperCase()==="N/A"||v==="")? null:v;
+      return {
+        id:i+1, name:g(C.name), am:g(C.am), csm:g(C.csm), associate:g(C.associate),
+        arr:n(C.arr), channel:g(C.channel)||"—", tier:g(C.tier)||"-", stage:g(C.stage)||"—",
+        status:g(C.status)||"Happy",
+        commit:n(C.commit)>0?n(C.commit):null, delivered:n(C.delivered)>0?n(C.delivered):null,
+        users:{reg:n(C.ut),happy:n(C.uh),test:n(C.utest)},
+        inf:{reg:n(C.it),happy:n(C.ih),test:n(C.itest)},
+        sponsor:{touched:n(C.st),happy:n(C.sh)},
+        priority:cl(g(C.pri)), help:cl(g(C.help)),
+      };
+    });
 }
 
-const fmtARR = v => v>=1000000?`$${(v/1e6).toFixed(1)}M`:v>=1000?`$${(v/1000).toFixed(0)}K`:v>0?`$${v}`:"TBD";
-const calcPct = (a,b) => (!b||b===0) ? null : Math.round(a/b*100);
-const STATUS_ORDER = { Churned:0, Unhappy:1, "At Risk":2, Happy:3 };
+const fmtARR=v=>v>=1e6?`$${(v/1e6).toFixed(1)}M`:v>=1e3?`$${(v/1e3).toFixed(0)}K`:v>0?`$${v}`:"TBD";
+const pct=(a,b)=>(!b||b===0)?null:Math.round(a/b*100);
+const ORDER={Churned:0,Unhappy:1,"At Risk":2,Happy:3};
+const splitLines=s=>s?s.split(/(?=\d+\.)/).map(x=>x.trim()).filter(Boolean):[];
 
-function Pill({ status }) {
-  const map = { Happy:["pill-happy","dot-happy"], "At Risk":["pill-risk","dot-risk"], Unhappy:["pill-unhappy","dot-unhappy"], Churned:["pill-churned","dot-churned"] };
-  const [pc,dc] = map[status]||["pill-happy","dot-happy"];
-  return <span className={`pill ${pc}`}><span className={`pill-dot ${dc}`}/>{status}</span>;
+function Pill({s}){
+  const m={Happy:["p-happy","pd-happy"],"At Risk":["p-risk","pd-risk"],Unhappy:["p-unhappy","pd-unhappy"],Churned:["p-churned","pd-churned"]};
+  const [pc,dc]=m[s]||["p-happy","pd-happy"];
+  return <span className={`pill ${pc}`}><span className={`pdot ${dc}`}/>{s}</span>;
 }
 
-function ProgressBar({ commit, delivered }) {
-  const p = calcPct(delivered, commit);
-  const display = p===null?"N/A":`${p}%`;
-  const barW = p===null?0:Math.min(p,100);
-  const cls = p===null?"pf-accent":p>=100?"pf-accent":p>=50?"pf-green":p>=25?"pf-amber":"pf-red";
+function Delivery({commit,delivered}){
+  const p=pct(delivered,commit);
+  const w=p===null?0:Math.min(p,100);
+  const cls=p===null?"df-p":p>=100?"df-p":p>=50?"df-g":p>=25?"df-a":"df-r";
   return (
     <div>
-      <div className="delivery-row"><span>Delivery</span><span>{commit?`${delivered??0} / ${commit}`:"—"}</span></div>
-      <div className="progress-wrap">
-        <div className="progress-track"><div className={`progress-fill ${cls}`} style={{width:`${barW}%`}}/></div>
-        <span className="progress-pct">{display}</span>
+      <div className="del-row"><span>Delivery</span><span>{commit?`${delivered??0} / ${commit}`:"—"}</span></div>
+      <div className="del-wrap">
+        <div className="del-track"><div className={`del-fill ${cls}`} style={{width:`${w}%`}}/></div>
+        <span className="del-pct">{p===null?"N/A":`${p}%`}</span>
       </div>
     </div>
   );
 }
 
-function AccountCard({ a, onClick }) {
-  const borderCls = a.status==="At Risk"?"border-risk":a.status==="Unhappy"?"border-unhappy":a.status==="Churned"?"border-churned":"";
-  const userPct    = a.users.reg>0       ? Math.round(a.users.happy/a.users.reg*100)         : null;
-  const infPct     = a.inf.reg>0         ? Math.round(a.inf.happy/a.inf.reg*100)             : null;
-  const sponsorPct = a.sponsor.touched>0 ? Math.round(a.sponsor.happy/a.sponsor.touched*100) : null;
-  const pctCls = p => p===null?"mini-pct":p>=67?"mini-pct mini-pct-green":p>=34?"mini-pct mini-pct-amber":"mini-pct mini-pct-red";
-  const priorityLines = a.priority ? a.priority.split(/(?=\d+\.)/).map(s=>s.trim()).filter(Boolean) : [];
-  const helpLines     = a.help     ? a.help.split(/(?=\d+\.)/).map(s=>s.trim()).filter(Boolean)     : [];
-
+function MetCell({pctVal,touched,label}){
+  const cls=pctVal===null?"met-pct":pctVal>=67?"met-pct m-g":pctVal>=34?"met-pct m-a":"met-pct m-r";
   return (
-    <div className={`account-card ${borderCls}`} onClick={()=>onClick(a)}>
-      <div className="card-top">
+    <div className="met-cell">
+      <div className={cls}>{pctVal!==null?`${pctVal}%`:"—"}</div>
+      <div className="met-sub">{touched} touched</div>
+      <div className="met-lbl">{label}</div>
+    </div>
+  );
+}
+
+function Card({a,onClick}){
+  const bc=a.status==="At Risk"?"c-risk":a.status==="Unhappy"?"c-unhappy":a.status==="Churned"?"c-churned":"";
+  const up=pct(a.users.happy,a.users.reg);
+  const ip=pct(a.inf.happy,a.inf.reg);
+  const sp=pct(a.sponsor.happy,a.sponsor.touched);
+  const priLines=splitLines(a.priority);
+  const helpLines=splitLines(a.help);
+  return (
+    <div className={`card ${bc}`} onClick={()=>onClick(a)}>
+      <div className="card-head">
         <div>
           <div className="card-name">{a.name}</div>
           <div className="card-arr">{fmtARR(a.arr)}</div>
@@ -309,113 +273,74 @@ function AccountCard({ a, onClick }) {
             {a.tier&&a.tier!=="-"&&<span className="tag">{a.tier}</span>}
           </div>
         </div>
-        <Pill status={a.status}/>
+        <Pill s={a.status}/>
       </div>
-      <ProgressBar commit={a.commit} delivered={a.delivered}/>
-      <div className="mini-legend"><span className="mini-legend-dot"/><span>% = Happy</span></div>
-      <div className="mini-grid">
-        <div className="mini-cell">
-          <div className={pctCls(userPct)}>{userPct!==null?`${userPct}%`:"—"}</div>
-          <div className="mini-sub">{a.users.reg} touched</div>
-          <div className="mini-lbl">Users</div>
-        </div>
-        <div className="mini-cell">
-          <div className={pctCls(infPct)}>{infPct!==null?`${infPct}%`:"—"}</div>
-          <div className="mini-sub">{a.inf.reg} touched</div>
-          <div className="mini-lbl">Influencers</div>
-        </div>
-        <div className="mini-cell">
-          <div className={pctCls(sponsorPct)}>{sponsorPct!==null?`${sponsorPct}%`:"—"}</div>
-          <div className="mini-sub">{a.sponsor.touched>0?`${a.sponsor.happy}/${a.sponsor.touched}`:"none"}</div>
-          <div className="mini-lbl">Sponsor</div>
-        </div>
+      <Delivery commit={a.commit} delivered={a.delivered}/>
+      <div className="met-legend"><span className="met-dot"/><span>% = Happy</span></div>
+      <div className="met-grid">
+        <MetCell pctVal={up} touched={a.users.reg} label="Users"/>
+        <MetCell pctVal={ip} touched={a.inf.reg} label="Influencers"/>
+        <MetCell pctVal={sp} touched={a.sponsor.touched} label="Sponsor"/>
       </div>
-      {priorityLines.length>0&&(
-        <div className="card-priority">
-          {priorityLines.map((line,i)=><span key={i} className="card-priority-item">↗ {line}</span>)}
-        </div>
-      )}
-      {helpLines.length>0&&(
-        <div className="card-help">
-          {helpLines.map((line,i)=><span key={i} className="card-priority-item">● LT: {line}</span>)}
-        </div>
-      )}
+      {priLines.length>0&&<div className="pri">{priLines.map((l,i)=><span key={i} className="pri-line">↗ {l}</span>)}</div>}
+      {helpLines.length>0&&<div className="help">{helpLines.map((l,i)=><span key={i} className="pri-line">● LT: {l}</span>)}</div>}
     </div>
   );
 }
 
-function ModalCell({ value, label, color }) {
-  return (
-    <div className="modal-cell">
-      <div className="modal-cell-val" style={color?{color}:{}}>{value}</div>
-      <div className="modal-cell-lbl">{label}</div>
-    </div>
-  );
+function MCell({val,label,color}){
+  return <div className="mc"><div className="mc-val" style={color?{color}:{}}>{val}</div><div className="mc-lbl">{label}</div></div>;
 }
 
-function Modal({ a, onClose }) {
-  if (!a) return null;
-  const p = calcPct(a.delivered, a.commit);
-  const pColor = p===null?"var(--accent)":p>=100?"var(--accent)":p>=50?"var(--green)":p>=25?"var(--amber)":"var(--red)";
-  const priorityLines = a.priority ? a.priority.split(/(?=\d+\.)/).map(s=>s.trim()).filter(Boolean) : [];
+function Modal({a,onClose}){
+  if(!a)return null;
+  const p=pct(a.delivered,a.commit);
+  const pc2=p===null?"var(--accent)":p>=100?"var(--accent)":p>=50?"var(--green)":p>=25?"var(--amber)":"var(--red)";
+  const priLines=splitLines(a.priority);
+  const helpLines=splitLines(a.help);
   return (
-    <div className="modal-overlay open" onClick={onClose}>
-      <div className="modal-box" onClick={e=>e.stopPropagation()}>
-        <div className="modal-header">
+    <div className="mo open" onClick={onClose}>
+      <div className="mb" onClick={e=>e.stopPropagation()}>
+        <div className="mh">
           <div>
-            <div className="modal-name">{a.name}</div>
-            <div className="modal-meta-row">
-              <span className="modal-arr">{fmtARR(a.arr)}</span>
-              <Pill status={a.status}/>
+            <div className="mh-name">{a.name}</div>
+            <div className="mh-meta">
+              <span className="mh-arr">{fmtARR(a.arr)}</span>
+              <Pill s={a.status}/>
               <span className="tag">{a.channel}</span>
-              <span className="tag tag-accent">{a.stage}</span>
+              <span className="tag">{a.stage}</span>
             </div>
           </div>
           <button className="close-btn" onClick={onClose}>✕</button>
         </div>
-        <div className="modal-body">
-          <div><div className="modal-sec-title">Team</div>
-            <div className="modal-3grid">
-              <ModalCell value={a.csm} label="CSM"/>
-              <ModalCell value={a.am} label="AM"/>
-              <ModalCell value={a.associate} label="Associate"/>
+        <div className="mbd">
+          <div><div className="ms-title">Team</div>
+            <div className="m3"><MCell val={a.csm} label="CSM"/><MCell val={a.am} label="AM"/><MCell val={a.associate} label="Associate"/></div>
+          </div>
+          <div><div className="ms-title">Delivery</div>
+            <div className="m3">
+              <MCell val={a.commit??<span style={{color:"var(--ink-soft)",fontStyle:"italic",fontSize:13}}>N/A</span>} label="Contracted"/>
+              <MCell val={a.delivered??<span style={{color:"var(--ink-soft)",fontStyle:"italic",fontSize:13}}>N/A</span>} label="Delivered"/>
+              <MCell val={p===null?"N/A":`${p}%`} label="Progress" color={pc2}/>
             </div>
           </div>
-          <div><div className="modal-sec-title">Delivery</div>
-            <div className="modal-3grid">
-              <ModalCell value={a.commit??<span className="na-val">N/A</span>} label="Contracted"/>
-              <ModalCell value={a.delivered??<span className="na-val">N/A</span>} label="Delivered"/>
-              <ModalCell value={p===null?"N/A":`${p}%`} label="Progress" color={pColor}/>
-            </div>
+          <div><div className="ms-title">Users</div>
+            <div className="m3"><MCell val={a.users.reg} label="Touched"/><MCell val={a.users.happy} label="Happy" color="var(--green)"/><MCell val={a.users.test} label="Testimonials" color="var(--accent)"/></div>
           </div>
-          <div><div className="modal-sec-title">Users</div>
-            <div className="modal-3grid">
-              <ModalCell value={a.users.reg} label="Touched"/>
-              <ModalCell value={a.users.happy} label="Happy" color="var(--green)"/>
-              <ModalCell value={a.users.test} label="Testimonials" color="var(--accent)"/>
-            </div>
+          <div><div className="ms-title">Influencers</div>
+            <div className="m3"><MCell val={a.inf.reg} label="Touched"/><MCell val={a.inf.happy} label="Happy" color="var(--green)"/><MCell val={a.inf.test} label="Testimonials" color="var(--accent)"/></div>
           </div>
-          <div><div className="modal-sec-title">Influencers</div>
-            <div className="modal-3grid">
-              <ModalCell value={a.inf.reg} label="Touched"/>
-              <ModalCell value={a.inf.happy} label="Happy" color="var(--green)"/>
-              <ModalCell value={a.inf.test} label="Testimonials" color="var(--accent)"/>
-            </div>
+          <div><div className="ms-title">Sponsor</div>
+            <div className="m2"><MCell val={a.sponsor.touched} label="Touched"/><MCell val={a.sponsor.happy} label="Happy" color={a.sponsor.happy>0?"var(--green)":"var(--red)"}/></div>
           </div>
-          <div><div className="modal-sec-title">Sponsor</div>
-            <div className="modal-2grid">
-              <ModalCell value={a.sponsor.touched} label="Touched"/>
-              <ModalCell value={a.sponsor.happy} label="Happy" color={a.sponsor.happy>0?"var(--green)":"var(--red)"}/>
-            </div>
-          </div>
-          <div><div className="modal-sec-title">This Week</div>
-            {priorityLines.length>0
-              ?<div className="priority-box"><div className="lbl">Priority</div><div className="val">{priorityLines.map((l,i)=><span key={i} className="priority-line">{l}</span>)}</div></div>
-              :<div className="priority-box" style={{background:"var(--paper)",border:"1px solid var(--rule)"}}><div className="lbl" style={{color:"var(--ink-soft)"}}>Priority</div><div className="val" style={{color:"var(--ink-soft)",fontStyle:"italic",fontWeight:400}}>Not set</div></div>
+          <div><div className="ms-title">This Week</div>
+            {priLines.length>0
+              ?<div className="pbox"><div className="lbl">Priority</div><div className="val">{priLines.map((l,i)=><span key={i} style={{display:"block"}}>{l}</span>)}</div></div>
+              :<div className="pbox" style={{background:"var(--paper)",border:"1px solid var(--rule)"}}><div className="lbl" style={{color:"var(--ink-soft)"}}>Priority</div><div className="val" style={{color:"var(--ink-soft)",fontStyle:"italic",fontWeight:400}}>Not set</div></div>
             }
-            <div style={{marginTop:8}} className={`help-box ${a.help?"needed":"none"}`}>
+            <div style={{marginTop:8}} className={`hbox ${helpLines.length>0?"on":"off"}`}>
               <div className="lbl">Help from Leadership</div>
-              <div className="val">{a.help||"None needed"}</div>
+              <div className="val">{helpLines.length>0?helpLines.map((l,i)=><span key={i} style={{display:"block"}}>{l}</span>):"None needed"}</div>
             </div>
           </div>
         </div>
@@ -424,249 +349,199 @@ function Modal({ a, onClose }) {
   );
 }
 
-function TestimonialsSection() {
+function Testi(){
   return (
-    <div className="testimonials-section">
-      <div className="testimonials-eyebrow">🌟 Testimonials this week</div>
-      <div className="testimonials-grid">
-        {TESTIMONIALS.map(t=>(
-          <div key={t.id} className="tcard">
-            <div className="tcard-quote">" {t.quote} <em>{t.highlight}</em> {t.tail} "</div>
-            <div className="tcard-person">
-              <div className="tcard-avatar">{t.initials}</div>
-              <div>
-                <div className="tcard-name">{t.name}</div>
-                <div className="tcard-title">{t.title}</div>
-                <span className="tcard-account">{t.company}</span>
-              </div>
+    <div className="testi">
+      <div className="testi-eye">🌟 Testimonials this week</div>
+      {TESTIMONIALS.map(t=>(
+        <div key={t.id} className="tcard">
+          <div className="tcard-quote">" {t.quote} <em>{t.highlight}</em> "</div>
+          <div className="tcard-person">
+            <div className="tcard-av">{t.initials}</div>
+            <div>
+              <div className="tcard-name">{t.name}</div>
+              <div className="tcard-title">{t.title}</div>
+              <span className="tcard-co">{t.company}</span>
             </div>
           </div>
-        ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PasteScreen({onLoad}){
+  const [txt,setTxt]=useState("");
+  const [err,setErr]=useState("");
+  function load(){
+    setErr("");
+    const lines=txt.trim().split("\n").map(l=>l.split("\t").map(c=>c.trim()));
+    const hi=lines.findIndex(r=>r.some(c=>c.toLowerCase().includes("customer name")));
+    if(hi<0){setErr("Could not find headers — make sure you copied the full sheet including the header row.");return;}
+    const parsed=parseCSV(txt.split("\t").join(","));// convert TSV to CSV for unified parser
+    // Actually just try parseCSV on the raw text first (CSV), then TSV fallback
+    let data=parseCSV(txt);
+    if(!data||data.length===0){
+      // TSV fallback: replace tabs with commas
+      data=parseCSV(txt.replace(/\t/g,","));
+    }
+    if(!data||data.length===0){setErr("No data rows found. Try again.");return;}
+    onLoad(data);
+  }
+  return (
+    <div className="paste-screen">
+      <div>
+        <div style={{textAlign:"center",marginBottom:28}}>
+          <div style={{fontFamily:"var(--serif)",fontSize:26,color:"var(--ink)"}}><b style={{color:"var(--accent)"}}>vieu</b> · Customer Dashboard</div>
+          <div style={{fontSize:13,color:"var(--ink-soft)",marginTop:6}}>Copy your Google Sheet and paste below to load the dashboard.</div>
+        </div>
+        <div className="paste-box">
+          <div style={{fontSize:11,fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",color:"var(--accent)",marginBottom:16}}>How to load</div>
+          {[["1","Open your Google Sheet"],["2","Press Cmd+A / Ctrl+A to select all"],["3","Press Cmd+C / Ctrl+C to copy"],["4","Paste below and click Load"]].map(([n,t])=>(
+            <div key={n} className="paste-step">
+              <span className="paste-num">{n}</span>
+              <span className="paste-text-lbl">{t}</span>
+            </div>
+          ))}
+          <textarea className="paste-ta" placeholder="Paste sheet data here…" value={txt} onChange={e=>setTxt(e.target.value)}/>
+          {err&&<div className="paste-err">{err}</div>}
+          <button className="paste-btn" style={{background:txt.trim()?"var(--accent)":"var(--rule)",cursor:txt.trim()?"pointer":"not-allowed"}} disabled={!txt.trim()} onClick={load}>Load Dashboard →</button>
+        </div>
       </div>
     </div>
   );
 }
 
-function App() {
-  const [data, setData]         = useState([]);
-  const [showPaste, setShowPaste] = useState(true);
-  const [pasteText, setPasteText] = useState("");
-  const [parseError, setParseError] = useState("");
-  const [lastUpdated, setLastUpdated] = useState(null);
-  const [filters, setFilters]   = useState({ status:"all", am:"all", csm:"all", associate:"all", channel:"all", stage:"all" });
-  const [search, setSearch]     = useState("");
-  const [selected, setSelected] = useState(null);
+function App(){
+  const [data,setData]=useState(null);
+  const [lastUpd,setLastUpd]=useState(null);
+  const [filters,setFilters]=useState({status:"all",am:"all",csm:"all",associate:"all",channel:"all",stage:"all"});
+  const [search,setSearch]=useState("");
+  const [selected,setSelected]=useState(null);
+  const [loadErr,setLoadErr]=useState("");
 
-  // Parse tab-separated data (copied from Google Sheets) — also handles newlines in cells
-  function parseTSV(text) {
-    // Google Sheets paste uses \t between columns and \n between rows
-    // Multi-line cells come through as literal newlines within a cell — we collapse them
-    const lines = text.trim().split("\n").map(l => l.split("\t").map(c => c.replace(/\r/g,"").trim()));
-    let headerIdx = lines.findIndex(r => r.some(c => c.toLowerCase().includes("customer name")));
-    if (headerIdx < 0) return null;
-    const headers = lines[headerIdx].map(h => h.toLowerCase().replace(/[^a-z0-9\s]/g,"").trim());
-    const col = (...names) => { for (const n of names) { const i = headers.findIndex(h=>h.includes(n)); if(i>=0) return i; } return -1; };
-    const C = {
-      name:col("customer name"), am:col("am"), csm:col("csm"), associate:col("associate"),
-      arr:col("arr"), channel:col("channel"), tier:col("tier"), stage:col("stage"), status:col("status"),
-      commit:col("delivery commit"), delivered:col("delivered so far"),
-      usersTouched:col("users touched"), happyUsers:col("happy users"), userTest:col("user testimonials"),
-      infTouched:col("influencers touched"), happyInf:col("happy influencers"), infTest:col("influencer testimonials"),
-      sponsorTouched:col("sponsor touched"), sponsorHappy:col("sponsor happy"),
-      priority:col("priority for next","next 1 week","priority"), help:col("help from"),
-    };
-    const rows = lines.slice(headerIdx+1).filter(r => C.name>=0 && r[C.name] && r[C.name].trim() !== "" && r[C.name].trim() !== "-");
-    if (rows.length === 0) return null;
-    return rows.map((r,i) => {
-      const g = idx => idx>=0 && r[idx] ? r[idx].replace(/\n/g," ").trim() : "";
-      const num = idx => { const v=g(idx).replace(/[$,\s%]/g,""); return v===""||v==="-"||v==="N/A"?0:parseFloat(v)||0; };
-      const clean = v => (!v||v==="N/A"||v==="-"||v==="") ? null : v;
-      return {
-        id:i+1, name:g(C.name), am:g(C.am), csm:g(C.csm), associate:g(C.associate),
-        arr:num(C.arr), channel:g(C.channel)||"—", tier:g(C.tier)||"-", stage:g(C.stage)||"—", status:g(C.status)||"Happy",
-        commit:num(C.commit)>0?num(C.commit):null, delivered:num(C.delivered)>0?num(C.delivered):null,
-        users:{reg:num(C.usersTouched),happy:num(C.happyUsers),test:num(C.userTest)},
-        inf:{reg:num(C.infTouched),happy:num(C.happyInf),test:num(C.infTest)},
-        sponsor:{touched:num(C.sponsorTouched),happy:num(C.sponsorHappy)},
-        priority:clean(g(C.priority)), help:clean(g(C.help)),
-      };
-    });
-  }
+  // Try auto-fetch on mount
+  React.useEffect(()=>{
+    fetch(SHEET_URL,{cache:"no-store"})
+      .then(r=>r.ok?r.text():Promise.reject(r.status))
+      .then(txt=>{
+        const d=parseCSV(txt);
+        if(d&&d.length>0){setData(d);setLastUpd(new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));}
+      })
+      .catch(()=>{}); // silent fail — paste screen shown
+  },[]);
 
-  function handleLoad() {
-    setParseError("");
-    const parsed = parseTSV(pasteText);
-    if (!parsed) { setParseError("Could not find data — make sure you copied the full sheet including headers."); return; }
-    setData(parsed);
-    setLastUpdated(new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));
-    setShowPaste(false);
-  }
+  function handlePaste(d){setData(d);setLastUpd(new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));}
 
-  const setF = (key,val) => setFilters(f=>({...f,[key]:val}));
-  const activeCount = Object.values(filters).filter(v=>v!=="all").length;
-  const clearAll = () => setFilters({status:"all",am:"all",csm:"all",associate:"all",channel:"all",stage:"all"});
-  const uniq = key => ["all",...new Set(data.map(a=>a[key]).filter(Boolean).map(v=>String(v).trim()).filter(v=>v&&v!=="-"))];
+  if(!data) return <PasteScreen onLoad={handlePaste}/>;
 
-  const happy   = data.filter(a=>a.status==="Happy");
-  const atRisk  = data.filter(a=>a.status==="At Risk");
-  const unhappy = data.filter(a=>a.status==="Unhappy");
-  const churned = data.filter(a=>a.status==="Churned");
-  const needsLT = data.filter(a=>a.help);
-  const totalUsers  = data.reduce((s,a)=>s+a.users.reg,0);
-  const happyUsers  = data.reduce((s,a)=>s+a.users.happy,0);
-  const totalTests  = data.reduce((s,a)=>s+a.users.test+a.inf.test,0);
-  const totalARR    = data.reduce((s,a)=>s+a.arr,0);
+  const setF=(k,v)=>setFilters(f=>({...f,[k]:v}));
+  const clearAll=()=>setFilters({status:"all",am:"all",csm:"all",associate:"all",channel:"all",stage:"all"});
+  const active=Object.values(filters).filter(v=>v!=="all").length;
+  const uniq=k=>["all",...new Set(data.map(a=>a[k]).filter(Boolean).map(v=>String(v).trim()).filter(v=>v&&v!=="-"))];
 
-  const filtered = data
-    .filter(a=>filters.status==="all"    ||a.status===filters.status)
-    .filter(a=>filters.am==="all"        ||a.am===filters.am)
-    .filter(a=>filters.csm==="all"       ||a.csm===filters.csm)
-    .filter(a=>filters.associate==="all" ||a.associate===filters.associate)
-    .filter(a=>filters.channel==="all"   ||a.channel===filters.channel)
-    .filter(a=>filters.stage==="all"     ||a.stage===filters.stage)
-    .filter(a=>!search||a.name.toLowerCase().includes(search.toLowerCase()))
-    .sort((a,b)=>(STATUS_ORDER[a.status]??4)-(STATUS_ORDER[b.status]??4));
+  const happy=data.filter(a=>a.status==="Happy");
+  const atRisk=data.filter(a=>a.status==="At Risk");
+  const unhappy=data.filter(a=>a.status==="Unhappy");
+  const churned=data.filter(a=>a.status==="Churned");
+  const needsLT=data.filter(a=>a.help);
+  const totalARR=data.reduce((s,a)=>s+a.arr,0);
+  const totalU=data.reduce((s,a)=>s+a.users.reg,0);
+  const happyU=data.reduce((s,a)=>s+a.users.happy,0);
+  const totalT=data.reduce((s,a)=>s+a.users.test+a.inf.test,0);
 
-  const FILTER_DEFS = [
-    {key:"status",label:"Status",opts:uniq("status")},
-    {key:"am",label:"AM",opts:uniq("am")},
-    {key:"csm",label:"CSM",opts:uniq("csm")},
-    {key:"associate",label:"Associate",opts:uniq("associate")},
-    {key:"channel",label:"Channel",opts:uniq("channel")},
-    {key:"stage",label:"Stage",opts:uniq("stage")},
+  const FDEFS=[
+    {k:"status",l:"Status"},{k:"am",l:"AM"},{k:"csm",l:"CSM"},
+    {k:"associate",l:"Associate"},{k:"channel",l:"Channel"},{k:"stage",l:"Stage"},
   ];
 
-  const weekStr = lastUpdated
-    ? new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})
-    : new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+  const filtered=data
+    .filter(a=>filters.status==="all"||a.status===filters.status)
+    .filter(a=>filters.am==="all"||a.am===filters.am)
+    .filter(a=>filters.csm==="all"||a.csm===filters.csm)
+    .filter(a=>filters.associate==="all"||a.associate===filters.associate)
+    .filter(a=>filters.channel==="all"||a.channel===filters.channel)
+    .filter(a=>filters.stage==="all"||a.stage===filters.stage)
+    .filter(a=>!search||a.name.toLowerCase().includes(search.toLowerCase()))
+    .sort((a,b)=>(ORDER[a.status]??4)-(ORDER[b.status]??4));
 
-  // PASTE SCREEN
-  if (showPaste) return (
-    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"40px 24px",background:"var(--paper)"}}>
-      <div style={{width:"100%",maxWidth:580}}>
-        <div style={{marginBottom:28,textAlign:"center"}}>
-          <div style={{fontFamily:"var(--serif)",fontSize:26,fontWeight:400,color:"var(--ink)",marginBottom:8}}><b style={{color:"var(--accent)"}}>vieu</b> · Customer Dashboard</div>
-          <div style={{fontSize:13,color:"var(--ink-soft)",lineHeight:1.6}}>To load your data, copy your Google Sheet and paste it below.</div>
+  const today=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+
+  return (<>
+    <nav className="nav">
+      <div className="nav-in">
+        <div className="brand"><b>vieu</b> · Customer Dashboard</div>
+        <div className="nav-right">
+          <input className="search-input" placeholder="Search accounts…" value={search} onChange={e=>setSearch(e.target.value)}/>
+          {lastUpd&&<span className="last-upd">Updated {lastUpd}</span>}
+          <button className="upd-btn" onClick={()=>setData(null)}>↻ Update Data</button>
+          <span className="week-badge">Week of {today}</span>
         </div>
-
-        <div style={{background:"var(--white)",border:"1px solid var(--rule)",borderRadius:16,padding:28}}>
-          <div style={{fontSize:11,fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",color:"var(--accent)",marginBottom:16}}>How to load data</div>
+      </div>
+    </nav>
+    <div className="main">
+      <div>
+        <div className="eyebrow">Major Accounts · CEO Sync</div>
+        <div className="stat-grid">
           {[
-            ["1","Open your Google Sheet"],
-            ["2","Press Ctrl+A (or Cmd+A on Mac) to select all"],
-            ["3","Press Ctrl+C (or Cmd+C) to copy"],
-            ["4","Click in the box below and press Ctrl+V to paste"],
-          ].map(([n,t])=>(
-            <div key={n} style={{display:"flex",gap:12,marginBottom:10,alignItems:"flex-start"}}>
-              <span style={{width:22,height:22,borderRadius:"50%",background:"var(--accent-lt)",color:"var(--accent)",fontSize:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{n}</span>
-              <span style={{fontSize:13,color:"var(--ink)",paddingTop:2}}>{t}</span>
+            {l:"Total ARR",v:fmtARR(totalARR),s:null,c:"sv-a"},
+            {l:"Accounts",v:data.length,s:null,c:""},
+            {l:"Happy",v:happy.length,s:`${data.length?Math.round(happy.length/data.length*100):0}% of portfolio`,c:"sv-g"},
+            {l:"At Risk",v:atRisk.length,s:"Watch closely",c:"sv-b"},
+            {l:"Unhappy",v:unhappy.length,s:"Urgent",c:"sv-r"},
+            {l:"Churned",v:churned.length,s:"Lost",c:"sv-r"},
+            {l:"Needs LT Help",v:needsLT.length,s:"This week",c:"sv-r"},
+          ].map(x=>(
+            <div key={x.l} className="stat-card">
+              <div className="stat-label">{x.l}</div>
+              <div className={`stat-value ${x.c}`}>{x.v}</div>
+              {x.s&&<div className="stat-sub">{x.s}</div>}
             </div>
           ))}
-
-          <textarea
-            style={{width:"100%",marginTop:16,height:120,fontFamily:"var(--sans)",fontSize:12,padding:"10px 12px",border:"1px solid var(--rule)",borderRadius:10,outline:"none",resize:"vertical",background:"var(--paper)",color:"var(--ink)"}}
-            placeholder="Paste your Google Sheet data here…"
-            value={pasteText}
-            onChange={e=>setPasteText(e.target.value)}
-            onFocus={e=>e.target.style.borderColor="var(--accent)"}
-            onBlur={e=>e.target.style.borderColor="var(--rule)"}
-          />
-          {parseError && <div style={{color:"var(--red)",fontSize:12,marginTop:8}}>{parseError}</div>}
-          <button
-            onClick={handleLoad}
-            disabled={!pasteText.trim()}
-            style={{marginTop:14,width:"100%",fontFamily:"var(--sans)",fontSize:13,fontWeight:700,color:"#fff",background:pasteText.trim()?"var(--accent)":"var(--rule)",border:"none",borderRadius:30,padding:"11px 0",cursor:pasteText.trim()?"pointer":"not-allowed",transition:"background .15s"}}
-          >
-            Load Dashboard →
-          </button>
         </div>
+      </div>
+
+      <Testi/>
+
+      {needsLT.length>0&&(
+        <div className="lt-banner">
+          <span className="lt-label">● Leadership action needed this week:</span>
+          {needsLT.map(a=>(
+            <button key={a.id} className="lt-chip" onClick={()=>setSelected(a)}>{a.name} — {a.help}</button>
+          ))}
+        </div>
+      )}
+
+      <div className="filter-bar">
+        <span className="fb-label">Filter</span>
+        <div className="fb-div"/>
+        {FDEFS.map(f=>(
+          <div key={f.k} className="fg">
+            <span className="fg-label">{f.l}</span>
+            <select className={`fsel${filters[f.k]!=="all"?" on":""}`} value={filters[f.k]} onChange={e=>setF(f.k,e.target.value)}>
+              {uniq(f.k).map(o=><option key={o} value={o}>{o==="all"?`All ${f.l}s`:o}</option>)}
+            </select>
+          </div>
+        ))}
+        <div className="fb-div"/>
+        {active>0&&<button className="f-clear" onClick={clearAll}>✕ Clear {active}</button>}
+        <span className="f-count">{filtered.length} of {data.length} accounts</span>
+      </div>
+
+      <div className="card-grid">
+        {filtered.map(a=><Card key={a.id} a={a} onClick={setSelected}/>)}
+      </div>
+      {filtered.length===0&&<div className="empty">No accounts match your filter.</div>}
+
+      <div className="footer">
+        <span>{data.length} accounts · {fmtARR(totalARR)} ARR</span>
+        <span>Users: {happyU}/{totalU} happy</span>
+        <span>Testimonials: {totalT}</span>
+        <span>Week of {today}</span>
       </div>
     </div>
-  );
-
-  return (
-    <>
-      <nav className="nav">
-        <div className="nav-in">
-          <div className="brand"><b>vieu</b> · Customer Dashboard</div>
-          <div className="nav-right">
-            <input className="search-input" placeholder="Search accounts…" value={search} onChange={e=>setSearch(e.target.value)}/>
-            {lastUpdated && <span className="last-updated">Updated {lastUpdated}</span>}
-            <button className="refresh-btn" onClick={()=>{setShowPaste(true);setPasteText("");}}>
-              ↻ Update Data
-            </button>
-            <span className="week-badge">Week of {weekStr}</span>
-          </div>
-        </div>
-      </nav>
-
-      <div className="main">
-        <div>
-          <div className="eyebrow">Major Accounts · CEO Sync</div>
-          <div className="stat-grid">
-            {[
-              {label:"Total ARR",    value:fmtARR(totalARR), sub:null,                                      cls:"sv-accent"},
-              {label:"Accounts",     value:data.length,       sub:null,                                      cls:"sv-ink"},
-              {label:"Happy",        value:happy.length,      sub:`${data.length?Math.round(happy.length/data.length*100):0}% of portfolio`, cls:"sv-green"},
-              {label:"At Risk",      value:atRisk.length,     sub:"Watch closely",                           cls:"sv-amber"},
-              {label:"Unhappy",      value:unhappy.length,    sub:"Urgent",                                  cls:"sv-red"},
-              {label:"Churned",      value:churned.length,    sub:"Lost",                                    cls:"sv-red"},
-              {label:"Needs LT Help",value:needsLT.length,    sub:"This week",                               cls:"sv-red"},
-            ].map(c=>(
-              <div key={c.label} className="stat-card">
-                <div className="stat-label">{c.label}</div>
-                <div className={`stat-value ${c.cls}`}>{c.value}</div>
-                {c.sub&&<div className="stat-sub">{c.sub}</div>}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <TestimonialsSection/>
-
-        {needsLT.length>0&&(
-          <div className="lt-banner">
-            <span className="lt-label">● Leadership action needed this week:</span>
-            {needsLT.map(a=>(
-              <button key={a.id} className="lt-chip" onClick={()=>setSelected(a)}>
-                {a.name} — {a.help}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="filter-bar">
-          <span className="filter-bar-label">Filter</span>
-          <div className="filter-divider"/>
-          {FILTER_DEFS.map(f=>(
-            <div key={f.key} className="filter-group">
-              <span className="filter-group-label">{f.label}</span>
-              <select className={`filter-select${filters[f.key]!=="all"?" active":""}`} value={filters[f.key]} onChange={e=>setF(f.key,e.target.value)}>
-                {f.opts.map(o=><option key={o} value={o}>{o==="all"?`All ${f.label}${f.label.endsWith("s")?"es":"s"}`:o}</option>)}
-              </select>
-            </div>
-          ))}
-          <div className="filter-divider"/>
-          {activeCount>0&&<button className="filter-clear" onClick={clearAll}>✕ Clear {activeCount} filter{activeCount>1?"s":""}</button>}
-          <span className="filter-results">{filtered.length} of {data.length} accounts</span>
-        </div>
-
-        <div className="account-grid">
-          {filtered.map(a=><AccountCard key={a.id} a={a} onClick={setSelected}/>)}
-        </div>
-        {filtered.length===0&&<div className="empty-state">No accounts match your filter.</div>}
-
-        <div className="page-footer">
-          <span>{data.length} accounts · {fmtARR(totalARR)} ARR</span>
-          <span>Users touched: {totalUsers} · Happy: {happyUsers}</span>
-          <span>Total testimonials: {totalTests}</span>
-          <span>Week of {weekStr}</span>
-        </div>
-      </div>
-
-      {selected&&<Modal a={selected} onClose={()=>setSelected(null)}/>}
-    </>
-  );
+    {selected&&<Modal a={selected} onClose={()=>setSelected(null)}/>}
+  </>);
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
