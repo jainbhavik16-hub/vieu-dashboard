@@ -57,18 +57,31 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-fo
 .f-clear{font-family:var(--sans);font-size:11px;font-weight:600;color:var(--ink-soft);background:transparent;border:none;cursor:pointer;padding:4px 8px;border-radius:20px;}
 .f-clear:hover{color:var(--accent);background:var(--accent-lt);}
 .f-count{margin-left:auto;font-size:11px;color:var(--ink-soft);}
-/* CARDS */
-.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-.card{background:var(--white);border:1px solid var(--rule);border-radius:12px;padding:18px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;}
-.card:hover{border-color:var(--accent);box-shadow:0 6px 22px rgba(119,68,255,.09);transform:translateY(-2px);}
-.card.c-risk{border-left:3px solid var(--amber);}
-.card.c-unhappy{border-left:3px solid var(--red);}
-.card.c-churned{border-left:3px solid var(--red);}
-.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:12px;}
-.card-name{font-family:var(--serif);font-size:15px;font-weight:400;line-height:1.25;color:var(--ink);}
-.card-arr{font-size:12px;font-weight:700;color:var(--accent);margin-top:2px;}
-.card-tags{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;}
-.tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--paper);border:1px solid var(--rule);color:var(--ink-soft);}
+/* TABLE ROWS */
+.tbl{width:100%;border-collapse:separate;border-spacing:0 6px;}
+.tbl-head th{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);padding:4px 10px;text-align:left;white-space:nowrap;}
+.tbl-row{background:var(--white);cursor:pointer;transition:all .15s;}
+.tbl-row:hover{box-shadow:0 3px 14px rgba(119,68,255,.08);}
+.tbl-row td{padding:12px 10px;vertical-align:middle;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);}
+.tbl-row td:first-child{border-left:1px solid var(--rule);border-radius:10px 0 0 10px;}
+.tbl-row td:last-child{border-right:1px solid var(--rule);border-radius:0 10px 10px 0;}
+.tbl-row.c-risk td:first-child{border-left:3px solid var(--amber);}
+.tbl-row.c-unhappy td:first-child,.tbl-row.c-churned td:first-child{border-left:3px solid var(--red);}
+.row-name{font-family:var(--serif);font-size:14px;font-weight:400;color:var(--ink);line-height:1.25;}
+.row-arr{font-size:11px;font-weight:700;color:var(--accent);margin-top:1px;}
+.row-chan{font-size:11px;color:var(--ink-soft);}
+.row-del{display:flex;align-items:center;gap:6px;min-width:110px;}
+.row-del-track{flex:1;height:4px;background:var(--rule);border-radius:2px;overflow:hidden;min-width:50px;}
+.row-del-fill{height:100%;border-radius:2px;}
+.df-g{background:var(--green);} .df-a{background:var(--amber);} .df-r{background:var(--red);} .df-p{background:var(--accent);}
+.row-del-pct{font-size:11px;font-weight:700;color:var(--ink-soft);white-space:nowrap;}
+.row-met{font-size:13px;font-weight:700;min-width:44px;text-align:center;}
+.m-g{color:var(--green);} .m-a{color:var(--amber);} .m-r{color:var(--red);}
+.row-met-sub{font-size:9.5px;color:var(--ink-soft);text-align:center;}
+.row-pri{font-size:11px;color:var(--amber);font-weight:600;max-width:240px;}
+.row-pri-line{display:block;line-height:1.4;word-break:break-word;}
+.row-help{font-size:11px;color:var(--red);font-weight:600;margin-top:4px;}
+.row-help-line{display:block;line-height:1.4;}
 /* PILL */
 .pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
 .p-happy{background:var(--green-lt);color:var(--green);}
@@ -76,26 +89,8 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-fo
 .p-unhappy,.p-churned{background:var(--red-lt);color:var(--red);}
 .pdot{width:5px;height:5px;border-radius:50%;display:inline-block;}
 .pd-happy{background:var(--green);} .pd-risk{background:var(--amber);} .pd-unhappy,.pd-churned{background:var(--red);}
-/* DELIVERY */
-.del-row{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink-soft);margin-bottom:4px;}
-.del-wrap{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
-.del-track{flex:1;height:5px;background:var(--rule);border-radius:3px;overflow:hidden;}
-.del-fill{height:100%;border-radius:3px;}
-.df-g{background:var(--green);} .df-a{background:var(--amber);} .df-r{background:var(--red);} .df-p{background:var(--accent);}
-.del-pct{font-size:11px;font-weight:700;color:var(--ink-soft);width:36px;text-align:right;white-space:nowrap;}
-/* METRICS */
-.met-legend{font-size:10px;color:var(--ink-soft);margin-bottom:5px;display:flex;align-items:center;gap:4px;}
-.met-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;}
-.met-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
-.met-cell{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:10px 4px 8px;text-align:center;}
-.met-pct{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--ink-soft);line-height:1;}
-.m-g{color:var(--green);} .m-a{color:var(--amber);} .m-r{color:var(--red);}
-.met-sub{font-size:10px;color:var(--ink-soft);margin-top:2px;}
-.met-lbl{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;padding-top:4px;border-top:1px solid var(--rule);}
-/* PRIORITY */
-.pri{font-size:12px;color:var(--amber);font-weight:600;}
-.pri-line{display:block;padding:2px 0;line-height:1.4;word-break:break-word;}
-.help{font-size:12px;color:var(--red);font-weight:600;margin-top:6px;}
+/* TAG */
+.tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--paper);border:1px solid var(--rule);color:var(--ink-soft);}
 /* TESTIMONIALS */
 .testi{background:#16172B;border-radius:16px;padding:26px;}
 .testi-eye{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#9B82FF;margin-bottom:16px;}
@@ -184,10 +179,12 @@ function parseCSV(text) {
 
   const hi = rows.findIndex(r=>r.some(c=>c.toLowerCase().includes("customer name")));
   if (hi<0) return [];
-  const H = rows[hi].map(h=>h.toLowerCase().replace(/[^a-z0-9 ]/g,"").trim());
+  const H = rows[hi].map(h=>h.toLowerCase().replace(/[^a-z0-9 /]/g,"").trim());
+  // Exact match first, then partial match
+  const colExact=n=>H.findIndex(h=>h===n);
   const col=(...ns)=>{ for(const n of ns){const i=H.findIndex(h=>h.includes(n));if(i>=0)return i;} return -1; };
   const C={
-    name:col("customer name"),am:col(" am"),csm:col("csm"),associate:col("associate"),
+    name:col("customer name"),am:colExact("am"),csm:colExact("csm"),associate:col("associate"),
     arr:col("arr"),channel:col("channel"),tier:col("tier"),stage:col("stage"),status:col("status"),
     commit:col("delivery commit"),delivered:col("delivered so far"),
     ut:col("users touched"),uh:col("happy users"),utest:col("user testimonials"),
@@ -196,8 +193,6 @@ function parseCSV(text) {
     pri:col("priority for next","next 1 week","priority"),
     help:col("help from"),
   };
-  // fallback for "am" — often first col or titled just "am"
-  if(C.am<0) C.am=col("^am$","\\bam\\b","am");
 
   return rows.slice(hi+1)
     .filter(r=>C.name>=0&&r[C.name]&&r[C.name].trim()&&r[C.name].trim()!=="-")
@@ -229,62 +224,36 @@ function Pill({s}){
   return <span className={`pill ${pc}`}><span className={`pdot ${dc}`}/>{s}</span>;
 }
 
-function Delivery({commit,delivered}){
-  const p=pct(delivered,commit);
-  const w=p===null?0:Math.min(p,100);
-  const cls=p===null?"df-p":p>=100?"df-p":p>=50?"df-g":p>=25?"df-a":"df-r";
-  return (
-    <div>
-      <div className="del-row"><span>Delivery</span><span>{commit?`${delivered??0} / ${commit}`:"—"}</span></div>
-      <div className="del-wrap">
-        <div className="del-track"><div className={`del-fill ${cls}`} style={{width:`${w}%`}}/></div>
-        <span className="del-pct">{p===null?"N/A":`${p}%`}</span>
-      </div>
-    </div>
-  );
-}
-
-function MetCell({pctVal,touched,label}){
-  const cls=pctVal===null?"met-pct":pctVal>=67?"met-pct m-g":pctVal>=34?"met-pct m-a":"met-pct m-r";
-  return (
-    <div className="met-cell">
-      <div className={cls}>{pctVal!==null?`${pctVal}%`:"—"}</div>
-      <div className="met-sub">{touched} touched</div>
-      <div className="met-lbl">{label}</div>
-    </div>
-  );
-}
-
-function Card({a,onClick}){
+function Row({a,onClick}){
   const bc=a.status==="At Risk"?"c-risk":a.status==="Unhappy"?"c-unhappy":a.status==="Churned"?"c-churned":"";
-  const up=pct(a.users.happy,a.users.reg);
-  const ip=pct(a.inf.happy,a.inf.reg);
-  const sp=pct(a.sponsor.happy,a.sponsor.touched);
+  const p=pct(a.delivered,a.commit);
+  const barW=p===null?0:Math.min(p,100);
+  const barCls=p===null?"df-p":p>=100?"df-p":p>=50?"df-g":p>=25?"df-a":"df-r";
+  const mc=(v,t)=>{const c=v===null?"":v>=67?"m-g":v>=34?"m-a":"m-r"; return {val:v!==null?`${v}%`:"—",cls:`row-met ${c}`,sub:`${t} touched`};};
+  const up=mc(pct(a.users.happy,a.users.reg),a.users.reg);
+  const ip=mc(pct(a.inf.happy,a.inf.reg),a.inf.reg);
+  const sp=mc(pct(a.sponsor.happy,a.sponsor.touched),a.sponsor.touched);
   const priLines=splitLines(a.priority);
   const helpLines=splitLines(a.help);
   return (
-    <div className={`card ${bc}`} onClick={()=>onClick(a)}>
-      <div className="card-head">
-        <div>
-          <div className="card-name">{a.name}</div>
-          <div className="card-arr">{fmtARR(a.arr)}</div>
-          <div className="card-tags">
-            <span className="tag">{a.channel}</span>
-            {a.tier&&a.tier!=="-"&&<span className="tag">{a.tier}</span>}
-          </div>
+    <tr className={`tbl-row ${bc}`} onClick={()=>onClick(a)}>
+      <td><div className="row-name">{a.name}</div><div className="row-arr">{fmtARR(a.arr)}</div></td>
+      <td><Pill s={a.status}/></td>
+      <td className="row-chan">{a.channel}</td>
+      <td>
+        <div className="row-del">
+          <div className="row-del-track"><div className={`row-del-fill ${barCls}`} style={{width:`${barW}%`}}/></div>
+          <span className="row-del-pct">{p===null?"N/A":`${p}%`}</span>
         </div>
-        <Pill s={a.status}/>
-      </div>
-      <Delivery commit={a.commit} delivered={a.delivered}/>
-      <div className="met-legend"><span className="met-dot"/><span>% = Happy</span></div>
-      <div className="met-grid">
-        <MetCell pctVal={up} touched={a.users.reg} label="Users"/>
-        <MetCell pctVal={ip} touched={a.inf.reg} label="Influencers"/>
-        <MetCell pctVal={sp} touched={a.sponsor.touched} label="Sponsor"/>
-      </div>
-      {priLines.length>0&&<div className="pri">{priLines.map((l,i)=><span key={i} className="pri-line">↗ {l}</span>)}</div>}
-      {helpLines.length>0&&<div className="help">{helpLines.map((l,i)=><span key={i} className="pri-line">● LT: {l}</span>)}</div>}
-    </div>
+      </td>
+      <td><div className={up.cls}>{up.val}</div><div className="row-met-sub">{up.sub}</div></td>
+      <td><div className={ip.cls}>{ip.val}</div><div className="row-met-sub">{ip.sub}</div></td>
+      <td><div className={sp.cls}>{sp.val}</div><div className="row-met-sub">{sp.sub}</div></td>
+      <td>
+        {priLines.length>0&&<div className="row-pri">{priLines.map((l,i)=><span key={i} className="row-pri-line">↗ {l}</span>)}</div>}
+        {helpLines.length>0&&<div className="row-help">{helpLines.map((l,i)=><span key={i} className="row-help-line">● LT: {l}</span>)}</div>}
+      </td>
+    </tr>
   );
 }
 
@@ -451,8 +420,8 @@ function App(){
   const totalT=data.reduce((s,a)=>s+a.users.test+a.inf.test,0);
 
   const FDEFS=[
-    {k:"status",l:"Status"},{k:"am",l:"AM"},{k:"csm",l:"CSM"},
-    {k:"associate",l:"Associate"},{k:"channel",l:"Channel"},{k:"stage",l:"Stage"},
+    {k:"status",l:"Status",all:"All Statuses"},{k:"am",l:"AM",all:"All AMs"},{k:"csm",l:"CSM",all:"All CSMs"},
+    {k:"associate",l:"Associate",all:"All Associates"},{k:"channel",l:"Channel",all:"All Channels"},{k:"stage",l:"Stage",all:"All Stages"},
   ];
 
   const filtered=data
@@ -519,7 +488,7 @@ function App(){
           <div key={f.k} className="fg">
             <span className="fg-label">{f.l}</span>
             <select className={`fsel${filters[f.k]!=="all"?" on":""}`} value={filters[f.k]} onChange={e=>setF(f.k,e.target.value)}>
-              {uniq(f.k).map(o=><option key={o} value={o}>{o==="all"?`All ${f.l}s`:o}</option>)}
+              {uniq(f.k).map(o=><option key={o} value={o}>{o==="all"?f.all:o}</option>)}
             </select>
           </div>
         ))}
@@ -528,9 +497,15 @@ function App(){
         <span className="f-count">{filtered.length} of {data.length} accounts</span>
       </div>
 
-      <div className="card-grid">
-        {filtered.map(a=><Card key={a.id} a={a} onClick={setSelected}/>)}
-      </div>
+      <table className="tbl">
+        <thead><tr className="tbl-head">
+          <th>Account</th><th>Status</th><th>Channel</th><th>Delivery</th>
+          <th>% Users Happy</th><th>% Inf Happy</th><th>% Sponsor Happy</th><th>Priority & LT Help</th>
+        </tr></thead>
+        <tbody>
+          {filtered.map(a=><Row key={a.id} a={a} onClick={setSelected}/>)}
+        </tbody>
+      </table>
       {filtered.length===0&&<div className="empty">No accounts match your filter.</div>}
 
       <div className="footer">
