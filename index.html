@@ -182,7 +182,7 @@
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect, useCallback } = React;
+const { useState } = React;
 
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpwVZC8gtTcXjuFKfzDK4GQgL49VuN2Oq3C7B4Byi_mGqBEze_qlQvC42Dr_16qn-C9uize7O-CVZy/pub?gid=1916327488&single=true&output=csv";
 const CSV_URL = SHEET_URL;
@@ -476,34 +476,56 @@ function TestimonialsSection() {
 
 function App() {
   const [data, setData]         = useState([]);
-  const [loading, setLoading]   = useState(true);
-  const [error, setError]       = useState(null);
+  const [showPaste, setShowPaste] = useState(true);
+  const [pasteText, setPasteText] = useState("");
+  const [parseError, setParseError] = useState("");
   const [lastUpdated, setLastUpdated] = useState(null);
-  const [spinning, setSpinning] = useState(false);
   const [filters, setFilters]   = useState({ status:"all", am:"all", csm:"all", associate:"all", channel:"all", stage:"all" });
   const [search, setSearch]     = useState("");
   const [selected, setSelected] = useState(null);
 
-  const fetchData = useCallback(async (isRefresh=false) => {
-    if (isRefresh) setSpinning(true); else setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(CSV_URL, { cache: "no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const text = await res.text();
-      const parsed = parseCSV(text);
-      if (parsed.length === 0) throw new Error("No data rows found in sheet.");
-      setData(parsed);
-      setLastUpdated(new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}));
-    } catch(e) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
-      setSpinning(false);
-    }
-  }, []);
+  // Parse tab-separated data (copied from Google Sheets)
+  function parseTSV(text) {
+    const lines = text.trim().split("\n").map(l => l.split("\t").map(c => c.trim()));
+    let headerIdx = lines.findIndex(r => r.some(c => c.toLowerCase().includes("customer name")));
+    if (headerIdx < 0) return null;
+    const headers = lines[headerIdx].map(h => h.toLowerCase().replace(/[^a-z0-9\s]/g,"").trim());
+    const col = (...names) => { for (const n of names) { const i = headers.findIndex(h=>h.includes(n)); if(i>=0) return i; } return -1; };
+    const C = {
+      name:col("customer name"), am:col("am"), csm:col("csm"), associate:col("associate"),
+      arr:col("arr"), channel:col("channel"), tier:col("tier"), stage:col("stage"), status:col("status"),
+      commit:col("delivery commit"), delivered:col("delivered so far"),
+      usersTouched:col("users touched"), happyUsers:col("happy users"), userTest:col("user testimonials"),
+      infTouched:col("influencers touched"), happyInf:col("happy influencers"), infTest:col("influencer testimonials"),
+      sponsorTouched:col("sponsor touched"), sponsorHappy:col("sponsor happy"),
+      priority:col("priority for next","next 1 week","priority"), help:col("help from"),
+    };
+    const rows = lines.slice(headerIdx+1).filter(r => C.name>=0 && r[C.name] && r[C.name].trim() !== "" && r[C.name].trim() !== "-");
+    if (rows.length === 0) return null;
+    return rows.map((r,i) => {
+      const g = idx => idx>=0 && r[idx] ? r[idx].trim() : "";
+      const num = idx => { const v=g(idx).replace(/[$,\s%]/g,""); return v===""||v==="-"||v==="N/A"?0:parseFloat(v)||0; };
+      const clean = v => (!v||v==="N/A"||v==="-"||v==="") ? null : v;
+      return {
+        id:i+1, name:g(C.name), am:g(C.am), csm:g(C.csm), associate:g(C.associate),
+        arr:num(C.arr), channel:g(C.channel)||"—", tier:g(C.tier)||"-", stage:g(C.stage)||"—", status:g(C.status)||"Happy",
+        commit:num(C.commit)>0?num(C.commit):null, delivered:num(C.delivered)>0?num(C.delivered):null,
+        users:{reg:num(C.usersTouched),happy:num(C.happyUsers),test:num(C.userTest)},
+        inf:{reg:num(C.infTouched),happy:num(C.happyInf),test:num(C.infTest)},
+        sponsor:{touched:num(C.sponsorTouched),happy:num(C.sponsorHappy)},
+        priority:clean(g(C.priority)), help:clean(g(C.help)),
+      };
+    });
+  }
 
-  useEffect(() => { fetchData(); }, []);
+  function handleLoad() {
+    setParseError("");
+    const parsed = parseTSV(pasteText);
+    if (!parsed) { setParseError("Could not find data — make sure you copied the full sheet including headers."); return; }
+    setData(parsed);
+    setLastUpdated(new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));
+    setShowPaste(false);
+  }
 
   const setF = (key,val) => setFilters(f=>({...f,[key]:val}));
   const activeCount = Object.values(filters).filter(v=>v!=="all").length;
@@ -531,32 +553,58 @@ function App() {
     .sort((a,b)=>(STATUS_ORDER[a.status]??4)-(STATUS_ORDER[b.status]??4));
 
   const FILTER_DEFS = [
-    {key:"status",    label:"Status",    opts:uniq("status")},
-    {key:"am",        label:"AM",        opts:uniq("am")},
-    {key:"csm",       label:"CSM",       opts:uniq("csm")},
-    {key:"associate", label:"Associate", opts:uniq("associate")},
-    {key:"channel",   label:"Channel",   opts:uniq("channel")},
-    {key:"stage",     label:"Stage",     opts:uniq("stage")},
+    {key:"status",label:"Status",opts:uniq("status")},
+    {key:"am",label:"AM",opts:uniq("am")},
+    {key:"csm",label:"CSM",opts:uniq("csm")},
+    {key:"associate",label:"Associate",opts:uniq("associate")},
+    {key:"channel",label:"Channel",opts:uniq("channel")},
+    {key:"stage",label:"Stage",opts:uniq("stage")},
   ];
 
   const weekStr = lastUpdated
     ? new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})
-    : "Loading…";
+    : new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
 
-  if (loading) return (
-    <div className="loading-screen">
-      <div className="loading-spinner"/>
-      <div className="loading-text">Loading data from Google Sheets…</div>
-    </div>
-  );
+  // PASTE SCREEN
+  if (showPaste) return (
+    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"40px 24px",background:"var(--paper)"}}>
+      <div style={{width:"100%",maxWidth:580}}>
+        <div style={{marginBottom:28,textAlign:"center"}}>
+          <div style={{fontFamily:"var(--serif)",fontSize:26,fontWeight:400,color:"var(--ink)",marginBottom:8}}><b style={{color:"var(--accent)"}}>vieu</b> · Customer Dashboard</div>
+          <div style={{fontSize:13,color:"var(--ink-soft)",lineHeight:1.6}}>To load your data, copy your Google Sheet and paste it below.</div>
+        </div>
 
-  if (error) return (
-    <div className="loading-screen">
-      <div className="error-box">
-        <h3>Could not load data</h3>
-        <p>{error}</p>
-        <p style={{marginTop:10}}>Make sure the sheet is published to web as CSV and the URL is correct.</p>
-        <button className="refresh-btn" style={{marginTop:14,display:"inline-flex"}} onClick={()=>fetchData()}>Try Again</button>
+        <div style={{background:"var(--white)",border:"1px solid var(--rule)",borderRadius:16,padding:28}}>
+          <div style={{fontSize:11,fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",color:"var(--accent)",marginBottom:16}}>How to load data</div>
+          {[
+            ["1","Open your Google Sheet"],
+            ["2","Press Ctrl+A (or Cmd+A on Mac) to select all"],
+            ["3","Press Ctrl+C (or Cmd+C) to copy"],
+            ["4","Click in the box below and press Ctrl+V to paste"],
+          ].map(([n,t])=>(
+            <div key={n} style={{display:"flex",gap:12,marginBottom:10,alignItems:"flex-start"}}>
+              <span style={{width:22,height:22,borderRadius:"50%",background:"var(--accent-lt)",color:"var(--accent)",fontSize:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{n}</span>
+              <span style={{fontSize:13,color:"var(--ink)",paddingTop:2}}>{t}</span>
+            </div>
+          ))}
+
+          <textarea
+            style={{width:"100%",marginTop:16,height:120,fontFamily:"var(--sans)",fontSize:12,padding:"10px 12px",border:"1px solid var(--rule)",borderRadius:10,outline:"none",resize:"vertical",background:"var(--paper)",color:"var(--ink)"}}
+            placeholder="Paste your Google Sheet data here…"
+            value={pasteText}
+            onChange={e=>setPasteText(e.target.value)}
+            onFocus={e=>e.target.style.borderColor="var(--accent)"}
+            onBlur={e=>e.target.style.borderColor="var(--rule)"}
+          />
+          {parseError && <div style={{color:"var(--red)",fontSize:12,marginTop:8}}>{parseError}</div>}
+          <button
+            onClick={handleLoad}
+            disabled={!pasteText.trim()}
+            style={{marginTop:14,width:"100%",fontFamily:"var(--sans)",fontSize:13,fontWeight:700,color:"#fff",background:pasteText.trim()?"var(--accent)":"var(--rule)",border:"none",borderRadius:30,padding:"11px 0",cursor:pasteText.trim()?"pointer":"not-allowed",transition:"background .15s"}}
+          >
+            Load Dashboard →
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -569,9 +617,8 @@ function App() {
           <div className="nav-right">
             <input className="search-input" placeholder="Search accounts…" value={search} onChange={e=>setSearch(e.target.value)}/>
             {lastUpdated && <span className="last-updated">Updated {lastUpdated}</span>}
-            <button className={`refresh-btn${spinning?" spinning":""}`} onClick={()=>fetchData(true)} disabled={spinning}>
-              <span className="spin-icon">↻</span>
-              {spinning?"Refreshing…":"Refresh"}
+            <button className="refresh-btn" onClick={()=>{setShowPaste(true);setPasteText("");}}>
+              ↻ Update Data
             </button>
             <span className="week-badge">Week of {weekStr}</span>
           </div>
