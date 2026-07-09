@@ -185,7 +185,7 @@
 const { useState, useEffect, useCallback } = React;
 
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpwVZC8gtTcXjuFKfzDK4GQgL49VuN2Oq3C7B4Byi_mGqBEze_qlQvC42Dr_16qn-C9uize7O-CVZy/pub?gid=1916327488&single=true&output=csv";
-const CSV_URL = "https://corsproxy.io/?" + encodeURIComponent(SHEET_URL);
+const CSV_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(SHEET_URL);
 
 const TESTIMONIALS = [
   {
@@ -201,47 +201,94 @@ const TESTIMONIALS = [
 ];
 
 // --- CSV PARSER ---
-function parseCSV(text) {
-  const lines = text.trim().split("\n").map(l => l.split(",").map(c => c.replace(/^"|"$/g, "").trim()));
-  // Find header row (look for "Customer Name")
-  let headerIdx = lines.findIndex(r => r.some(c => c.toLowerCase().includes("customer name")));
-  if (headerIdx < 0) headerIdx = 1;
-  const headers = lines[headerIdx].map(h => h.toLowerCase().trim());
-  const col = name => headers.findIndex(h => h.includes(name));
+function parseCSVLine(line) {
+  // Proper CSV parser that handles quoted fields containing commas
+  const result = [];
+  let cur = "", inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') { inQuotes = !inQuotes; }
+    else if (ch === ',' && !inQuotes) { result.push(cur.trim()); cur = ""; }
+    else { cur += ch; }
+  }
+  result.push(cur.trim());
+  return result;
+}
 
-  const rows = lines.slice(headerIdx + 1).filter(r => r[col("customer")] && r[col("customer")].trim() !== "");
+function parseCSV(text) {
+  const rawLines = text.trim().split("\n");
+  const lines = rawLines.map(l => parseCSVLine(l));
+
+  // Find the header row — it contains "Customer Name"
+  let headerIdx = lines.findIndex(r => r.some(c => c.toLowerCase().includes("customer name")));
+  if (headerIdx < 0) return [];
+
+  const headers = lines[headerIdx].map(h => h.toLowerCase().replace(/[^a-z0-9\s]/g,"").trim());
+
+  // Find column index by partial match
+  const col = (...names) => {
+    for (const name of names) {
+      const idx = headers.findIndex(h => h.includes(name));
+      if (idx >= 0) return idx;
+    }
+    return -1;
+  };
+
+  // Column indices based on actual sheet headers
+  const C = {
+    name:      col("customer name"),
+    am:        col("am"),
+    csm:       col("csm"),
+    associate: col("associate"),
+    arr:       col("arr"),
+    channel:   col("channel"),
+    tier:      col("tier"),
+    stage:     col("stage"),
+    status:    col("status"),
+    commit:    col("delivery commit"),
+    delivered: col("delivered so far"),
+    usersTouched:   col("users touched"),
+    happyUsers:     col("happy users"),
+    userTest:       col("user testimonials"),
+    infTouched:     col("influencers touched"),
+    happyInf:       col("happy influencers"),
+    infTest:        col("influencer testimonials"),
+    sponsorTouched: col("sponsor touched"),
+    sponsorHappy:   col("sponsor happy"),
+    priority:       col("priority for next", "next 1 week", "priority"),
+    help:           col("help from"),
+  };
+
+  const rows = lines.slice(headerIdx + 1).filter(r =>
+    C.name >= 0 && r[C.name] && r[C.name].trim() !== "" && r[C.name].trim() !== "-"
+  );
 
   return rows.map((r, i) => {
-    const g = name => (r[col(name)] || "").trim();
-    const n = name => { const v = g(name).replace(/[$,%\s]/g,""); return isNaN(v) || v==="" ? 0 : parseFloat(v); };
-
-    const arrRaw = g("arr").replace(/[$,\s]/g,"");
-    const arr = isNaN(arrRaw) || arrRaw==="" ? 0 : parseFloat(arrRaw);
-
-    const commit    = n("commit") || null;
-    const delivered = n("delivered") || null;
-
-    const priority = g("priority") || g("next 1 week") || null;
-    const help     = g("help") || null;
+    const g = idx => idx >= 0 && r[idx] ? r[idx].trim() : "";
+    const num = idx => {
+      const v = g(idx).replace(/[$,\s%]/g,"");
+      return v === "" || v === "-" || v === "N/A" ? 0 : parseFloat(v) || 0;
+    };
+    const clean = v => (!v || v === "N/A" || v === "-" || v === "") ? null : v;
 
     return {
-      id: i+1,
-      name:      g("customer"),
-      am:        g("am").replace(/\s+/g," "),
-      csm:       g("csm").replace(/\s+/g," "),
-      associate: g("associate").replace(/\s+/g," "),
-      arr,
-      channel:   g("channel"),
-      tier:      g("tier") || "-",
-      stage:     g("stage"),
-      status:    g("status"),
-      commit:    commit > 0 ? commit : null,
-      delivered: delivered > 0 ? delivered : null,
-      users:  { reg: n("users touched"), happy: n("happy users"), test: n("user test") },
-      inf:    { reg: n("influencers touched"), happy: n("happy influencers"), test: n("influencer test") },
-      sponsor:{ touched: n("sponsor touched"), happy: n("sponsor happy") },
-      priority: priority && priority !== "N/A" && priority !== "-" ? priority : null,
-      help:     help && help !== "N/A" && help !== "-" && help !== "" ? help : null,
+      id:        i + 1,
+      name:      g(C.name),
+      am:        g(C.am).replace(/\s+/g," "),
+      csm:       g(C.csm).replace(/\s+/g," "),
+      associate: g(C.associate).replace(/\s+/g," "),
+      arr:       num(C.arr),
+      channel:   g(C.channel) || "—",
+      tier:      g(C.tier) || "-",
+      stage:     g(C.stage) || "—",
+      status:    g(C.status) || "Happy",
+      commit:    num(C.commit) > 0 ? num(C.commit) : null,
+      delivered: num(C.delivered) > 0 ? num(C.delivered) : null,
+      users:   { reg: num(C.usersTouched), happy: num(C.happyUsers),  test: num(C.userTest) },
+      inf:     { reg: num(C.infTouched),   happy: num(C.happyInf),    test: num(C.infTest) },
+      sponsor: { touched: num(C.sponsorTouched), happy: num(C.sponsorHappy) },
+      priority: clean(g(C.priority)),
+      help:     clean(g(C.help)),
     };
   });
 }
