@@ -237,7 +237,7 @@ function parseCSV(text) {
 
 const fmtARR=v=>v>=1e6?`$${(v/1e6).toFixed(1)}M`:v>=1e3?`$${(v/1e3).toFixed(0)}K`:v>0?`$${v}`:"TBD";
 const pct=(a,b)=>(!b||b===0)?null:Math.round(a/b*100);
-const ORDER={Churned:0,Unhappy:1,"At Risk":2,Happy:3};
+const ORDER={Happy:0,"At Risk":1,Unhappy:2,Churned:3};
 const splitLines=s=>s?s.split(/(?=\d+\.)/).map(x=>x.trim()).filter(Boolean):[];
 
 function Pill({s}){
