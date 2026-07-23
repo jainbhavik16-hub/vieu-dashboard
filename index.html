@@ -166,9 +166,9 @@ const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpwVZC8gtTcX
 
 const TESTIMONIALS = [{
   id:1,
-  quote:"What impressed me most about Vieu was how it surfaced the information I actually needed, without me having to dig for it. Seeing warm paths into my actual target accounts, stakeholder insights, org charts, and key buying signals all in one place was genuinely exciting.",
-  highlight:"It's the kind of intelligence that helps you spend less time researching and more time creating pipeline. I'm looking forward to making Vieu part of my day-to-day workflow.",
-  name:"Justin Anderson", title:"Healthcare Enterprise Account Executive", company:"Rubrik", initials:"JA",
+  quote:"What I've seen so far is impressive — the methodology is identifying the right type of companies and contacts, with good intel behind every selection. Speed and flexibility are the standout features.",
+  highlight:"Day to day, this is much quicker than doing the messaging entirely myself — having stakeholders identified and messaging already drafted means I can just act. We've learned a few lessons along the way and sped things up as we've gone. I'm confident that with a bit more tightening, this could scale well.",
+  name:"Dave Smith", title:"Account Director", company:"Connect", initials:"DS",
 }];
 
 // ── CSV PARSER (handles quoted multi-line cells) ──
@@ -471,7 +471,7 @@ function App(){
             {l:"ARR at Risk",v:fmtARR(riskARR),s:`${atRisk.length} accounts`,c:"sv-b"},
             {l:"EN Pipeline",v:fmtARR(enPipeline),s:"Expansion + New",c:"sv-a"},
             {l:"Needs LT Help",v:needsLT.length,s:"This week",c:"sv-r"},
-            {l:"Testimonials",v:totalT,s:`${data.reduce((s,a)=>s+a.users.test,0)} user · ${data.reduce((s,a)=>s+a.inf.test,0)} influencer`,c:"sv-a"},
+            {l:"Testimonials",v:totalT,s:`${data.reduce((s,a)=>s+a.users.test,0)} user · ${data.reduce((s,a)=>s+a.inf.test,0)} inf · ${data.reduce((s,a)=>s+a.sponsor.happy,0)} sponsor`,c:"sv-a"},
           ].map(x=>(
             <div key={x.l} className="stat-card">
               <div className="stat-label">{x.l}</div>
