@@ -60,14 +60,15 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-fo
 /* TABLE ROWS */
 .tbl{width:100%;border-collapse:separate;border-spacing:0 6px;table-layout:fixed;}
 .tbl-head th{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);padding:4px 12px;text-align:left;white-space:nowrap;}
-.tbl-head th:nth-child(1){width:18%;}
-.tbl-head th:nth-child(2){width:8%;}
-.tbl-head th:nth-child(3){width:9%;}
-.tbl-head th:nth-child(4){width:12%;}
-.tbl-head th:nth-child(5){width:10%;}
-.tbl-head th:nth-child(6){width:10%;}
-.tbl-head th:nth-child(7){width:10%;}
-.tbl-head th:nth-child(8){width:23%;}
+.tbl-head th:nth-child(1){width:16%;}
+.tbl-head th:nth-child(2){width:7%;}
+.tbl-head th:nth-child(3){width:8%;}
+.tbl-head th:nth-child(4){width:8%;}
+.tbl-head th:nth-child(5){width:11%;}
+.tbl-head th:nth-child(6){width:9%;}
+.tbl-head th:nth-child(7){width:9%;}
+.tbl-head th:nth-child(8){width:9%;}
+.tbl-head th:nth-child(9){width:23%;}
 .tbl-row{background:var(--white);cursor:pointer;transition:all .15s;}
 .tbl-row:hover{box-shadow:0 3px 14px rgba(119,68,255,.08);}
 .tbl-row td{padding:14px 12px;vertical-align:middle;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);}
@@ -76,7 +77,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-fo
 .tbl-row.c-risk td:first-child{border-left:3px solid var(--amber);}
 .tbl-row.c-unhappy td:first-child,.tbl-row.c-churned td:first-child{border-left:3px solid var(--red);}
 .row-name{font-family:var(--serif);font-size:14px;font-weight:400;color:var(--ink);line-height:1.25;}
-.row-arr{font-size:11px;font-weight:700;color:var(--accent);margin-top:1px;}
+.row-arr{font-size:13px;font-weight:700;color:var(--accent);}
 .row-chan{font-size:11px;color:var(--ink-soft);}
 .row-del{display:flex;align-items:center;gap:6px;min-width:110px;}
 .row-del-track{flex:1;height:4px;background:var(--rule);border-radius:2px;overflow:hidden;min-width:50px;}
@@ -202,23 +203,36 @@ function parseCSV(text) {
     help:col("help from"),
   };
 
-  return rows.slice(hi+1)
-    .filter(r=>C.name>=0&&r[C.name]&&r[C.name].trim()&&r[C.name].trim()!=="-")
-    .map((r,i)=>{
-      const g=k=>k>=0&&r[k]?r[k].replace(/\n/g," ").trim():"";
-      const n=k=>{const v=g(k).replace(/[$, %]/g,"");return v===""||v==="-"||v.toUpperCase()==="N/A"?0:parseFloat(v)||0;};
-      const cl=v=>(!v||v==="-"||v.toUpperCase()==="N/A"||v==="")? null:v;
-      return {
-        id:i+1, name:g(C.name), am:g(C.am), csm:g(C.csm), associate:g(C.associate),
-        arr:n(C.arr), channel:g(C.channel)||"—", tier:g(C.tier)||"-", stage:g(C.stage)||"—",
-        status:g(C.status)||"Happy",
-        commit:n(C.commit)>0?n(C.commit):null, delivered:n(C.delivered)>0?n(C.delivered):null,
-        users:{reg:n(C.ut),happy:n(C.uh),test:n(C.utest)},
-        inf:{reg:n(C.it),happy:n(C.ih),test:n(C.itest)},
-        sponsor:{touched:n(C.st),happy:n(C.sh)},
-        priority:cl(g(C.pri)), help:cl(g(C.help)),
-      };
-    });
+  let enPipelineARR = 0;
+
+  const filtered_rows = rows.slice(hi+1).filter(r=>{
+    if(!r[C.name]||!r[C.name].trim()||r[C.name].trim()==="-") return false;
+    if(r[C.name].trim().toLowerCase().includes("pipeline")){
+      const v=C.arr>=0&&r[C.arr]?r[C.arr].replace(/[$,\s%]/g,""):"0";
+      enPipelineARR=parseFloat(v)||0;
+      return false;
+    }
+    return C.name>=0;
+  });
+
+  const accounts = filtered_rows.map((r,i)=>{
+    const g=k=>k>=0&&r[k]?r[k].replace(/\n/g," ").trim():"";
+    const n=k=>{const v=g(k).replace(/[$, %]/g,"");return v===""||v==="-"||v.toUpperCase()==="N/A"?0:parseFloat(v)||0;};
+    const cl=v=>(!v||v==="-"||v.toUpperCase()==="N/A"||v==="")? null:v;
+    return {
+      id:i+1, name:g(C.name), am:g(C.am), csm:g(C.csm), associate:g(C.associate),
+      arr:n(C.arr), channel:g(C.channel)||"—", tier:g(C.tier)||"-", stage:g(C.stage)||"—",
+      status:g(C.status)||"Happy",
+      commit:n(C.commit)>0?n(C.commit):null, delivered:n(C.delivered)>0?n(C.delivered):null,
+      users:{reg:n(C.ut),happy:n(C.uh),test:n(C.utest)},
+      inf:{reg:n(C.it),happy:n(C.ih),test:n(C.itest)},
+      sponsor:{touched:n(C.st),happy:n(C.sh)},
+      priority:cl(g(C.pri)), help:cl(g(C.help)),
+    };
+  });
+
+  accounts._enPipeline = enPipelineARR;
+  return accounts;
 }
 
 const fmtARR=v=>v>=1e6?`$${(v/1e6).toFixed(1)}M`:v>=1e3?`$${(v/1e3).toFixed(0)}K`:v>0?`$${v}`:"TBD";
@@ -245,7 +259,8 @@ function Row({a,onClick}){
   const helpLines=splitLines(a.help);
   return (
     <tr className={`tbl-row ${bc}`} onClick={()=>onClick(a)}>
-      <td><div className="row-name">{a.name}</div><div className="row-arr">{fmtARR(a.arr)}</div></td>
+      <td><div className="row-name">{a.name}</div></td>
+      <td><div className="row-arr">{fmtARR(a.arr)}</div></td>
       <td><Pill s={a.status}/></td>
       <td className="row-chan">{a.channel}</td>
       <td>
@@ -385,8 +400,17 @@ function PasteScreen({onLoad}){
       help:col("help from"),
     };
 
+    let enPipelineARR = 0;
     const dataRows = lines.slice(hi+1)
-      .filter(r=>C.name>=0&&r[C.name]&&r[C.name].trim()&&r[C.name].trim()!=="-")
+      .filter(r=>{
+        if(!r[C.name]||!r[C.name].trim()||r[C.name].trim()==="-") return false;
+        if(r[C.name].trim().toLowerCase().includes("pipeline")){
+          const v=C.arr>=0&&r[C.arr]?r[C.arr].replace(/[$,\s%]/g,""):"0";
+          enPipelineARR=parseFloat(v)||0;
+          return false;
+        }
+        return C.name>=0;
+      })
       .map((r,i)=>{
         const g=k=>k>=0&&r[k]?r[k].replace(/\n/g," ").trim():"";
         const n=k=>{const v=g(k).replace(/[$,\s%]/g,"");return v===""||v==="-"||v.toUpperCase()==="N/A"?0:parseFloat(v)||0;};
@@ -404,6 +428,7 @@ function PasteScreen({onLoad}){
       });
 
     if(dataRows.length===0){setErr("No data rows found. Make sure your sheet has data below the header row.");return;}
+    dataRows._enPipeline = enPipelineARR;
     onLoad(dataRows);
   }
   return (
@@ -468,7 +493,7 @@ function App(){
   const riskARR=atRisk.reduce((s,a)=>s+a.arr,0);
   const unhappyARR=unhappy.reduce((s,a)=>s+a.arr,0);
   const churnedARR=churned.reduce((s,a)=>s+a.arr,0);
-  const enPipeline=269000;
+  const enPipeline=data._enPipeline||0;
   const totalU=data.reduce((s,a)=>s+a.users.reg,0);
   const happyU=data.reduce((s,a)=>s+a.users.happy,0);
   const totalT=data.reduce((s,a)=>s+a.users.test+a.inf.test,0);
@@ -486,7 +511,7 @@ function App(){
     .filter(a=>filters.channel==="all"||a.channel===filters.channel)
     .filter(a=>filters.stage==="all"||a.stage===filters.stage)
     .filter(a=>!search||a.name.toLowerCase().includes(search.toLowerCase()))
-    .sort((a,b)=>(ORDER[a.status]??4)-(ORDER[b.status]??4));
+    .sort((a,b)=>{ const s=(ORDER[a.status]??4)-(ORDER[b.status]??4); return s!==0?s:b.arr-a.arr; });
 
   const today=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
 
@@ -510,8 +535,8 @@ function App(){
             {l:"Total ARR",v:fmtARR(totalARR),s:`${data.length} accounts`,c:"sv-a"},
             {l:"Healthy ARR",v:fmtARR(healthyARR),s:`${happy.length} accounts`,c:"sv-g"},
             {l:"ARR at Risk",v:fmtARR(riskARR),s:`${atRisk.length} accounts`,c:"sv-b"},
-            {l:"EN Pipeline",v:fmtARR(enPipeline),s:"Expansion + New",c:"sv-a"},
-            {l:"Needs LT Help",v:needsLT.length,s:"This week",c:"sv-r"},
+            {l:"EN Pipeline",v:fmtARR(enPipeline),s:"Expansion",c:"sv-a"},
+            {l:"Needs LT Help",v:needsLT.length,s:`${needsLT.length} accounts`,c:"sv-r"},
             {l:"Testimonials",v:totalT,s:`${data.reduce((s,a)=>s+a.users.test,0)} user · ${data.reduce((s,a)=>s+a.inf.test,0)} influencer`,c:"sv-a"},
           ].map(x=>(
             <div key={x.l} className="stat-card">
@@ -552,7 +577,7 @@ function App(){
 
       <table className="tbl">
         <thead><tr className="tbl-head">
-          <th>Account</th><th>Status</th><th>Channel</th><th>Delivery</th>
+          <th>Account</th><th>ARR</th><th>Status</th><th>Channel</th><th>Delivery</th>
           <th>% Users Happy</th><th>% Inf Happy</th><th>% Sponsor Happy</th><th>Priority & LT Help</th>
         </tr></thead>
         <tbody>
