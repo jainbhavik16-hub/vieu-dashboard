@@ -508,11 +508,11 @@ function App(){
         <div className="stat-grid">
           {[
             {l:"Total ARR",v:fmtARR(totalARR),s:`${data.length} accounts`,c:"sv-a"},
-            {l:"Healthy ARR",v:fmtARR(healthyARR),s:`${happy.length} accounts · ${data.length?Math.round(happy.length/data.length*100):0}%`,c:"sv-g"},
+            {l:"Healthy ARR",v:fmtARR(healthyARR),s:`${happy.length} accounts`,c:"sv-g"},
             {l:"ARR at Risk",v:fmtARR(riskARR),s:`${atRisk.length} accounts`,c:"sv-b"},
             {l:"EN Pipeline",v:fmtARR(enPipeline),s:"Expansion + New",c:"sv-a"},
             {l:"Needs LT Help",v:needsLT.length,s:"This week",c:"sv-r"},
-            {l:"Testimonials",v:totalT,s:`${data.reduce((s,a)=>s+a.users.test,0)} user · ${data.reduce((s,a)=>s+a.inf.test,0)} inf · ${data.reduce((s,a)=>s+a.sponsor.happy,0)} sponsor`,c:"sv-a"},
+            {l:"Testimonials",v:totalT,s:`${data.reduce((s,a)=>s+a.users.test,0)} user · ${data.reduce((s,a)=>s+a.inf.test,0)} influencer`,c:"sv-a"},
           ].map(x=>(
             <div key={x.l} className="stat-card">
               <div className="stat-label">{x.l}</div>
