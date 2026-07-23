@@ -34,7 +34,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-fo
 .main{max-width:var(--max);margin:0 auto;padding:28px 40px 60px;display:flex;flex-direction:column;gap:24px;}
 /* STATS */
 .eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
-.stat-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
+.stat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
 .stat-card{background:var(--white);border:1px solid var(--rule);border-radius:12px;padding:14px 16px;}
 .stat-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:5px;}
 .stat-value{font-family:var(--serif);font-size:26px;font-weight:400;line-height:1;}
@@ -423,6 +423,11 @@ function App(){
   const churned=data.filter(a=>a.status==="Churned");
   const needsLT=data.filter(a=>a.help);
   const totalARR=data.reduce((s,a)=>s+a.arr,0);
+  const healthyARR=happy.reduce((s,a)=>s+a.arr,0);
+  const riskARR=atRisk.reduce((s,a)=>s+a.arr,0);
+  const unhappyARR=unhappy.reduce((s,a)=>s+a.arr,0);
+  const churnedARR=churned.reduce((s,a)=>s+a.arr,0);
+  const enPipeline=269000;
   const totalU=data.reduce((s,a)=>s+a.users.reg,0);
   const happyU=data.reduce((s,a)=>s+a.users.happy,0);
   const totalT=data.reduce((s,a)=>s+a.users.test+a.inf.test,0);
@@ -461,13 +466,12 @@ function App(){
         <div className="eyebrow">Major Accounts · CEO Sync</div>
         <div className="stat-grid">
           {[
-            {l:"Total ARR",v:fmtARR(totalARR),s:null,c:"sv-a"},
-            {l:"Accounts",v:data.length,s:null,c:""},
-            {l:"Happy",v:happy.length,s:`${data.length?Math.round(happy.length/data.length*100):0}% of portfolio`,c:"sv-g"},
-            {l:"At Risk",v:atRisk.length,s:"Watch closely",c:"sv-b"},
-            {l:"Unhappy",v:unhappy.length,s:"Urgent",c:"sv-r"},
-            {l:"Churned",v:churned.length,s:"Lost",c:"sv-r"},
+            {l:"Total ARR",v:fmtARR(totalARR),s:`${data.length} accounts`,c:"sv-a"},
+            {l:"Healthy ARR",v:fmtARR(healthyARR),s:`${happy.length} accounts · ${data.length?Math.round(happy.length/data.length*100):0}%`,c:"sv-g"},
+            {l:"ARR at Risk",v:fmtARR(riskARR),s:`${atRisk.length} accounts`,c:"sv-b"},
+            {l:"EN Pipeline",v:fmtARR(enPipeline),s:"Expansion + New",c:"sv-a"},
             {l:"Needs LT Help",v:needsLT.length,s:"This week",c:"sv-r"},
+            {l:"Testimonials",v:totalT,s:`${data.reduce((s,a)=>s+a.users.test,0)} user · ${data.reduce((s,a)=>s+a.inf.test,0)} influencer`,c:"sv-a"},
           ].map(x=>(
             <div key={x.l} className="stat-card">
               <div className="stat-label">{x.l}</div>
