@@ -352,18 +352,59 @@ function PasteScreen({onLoad}){
   const [err,setErr]=useState("");
   function load(){
     setErr("");
-    const lines=txt.trim().split("\n").map(l=>l.split("\t").map(c=>c.trim()));
-    const hi=lines.findIndex(r=>r.some(c=>c.toLowerCase().includes("customer name")));
-    if(hi<0){setErr("Could not find headers — make sure you copied the full sheet including the header row.");return;}
-    const parsed=parseCSV(txt.split("\t").join(","));// convert TSV to CSV for unified parser
-    // Actually just try parseCSV on the raw text first (CSV), then TSV fallback
-    let data=parseCSV(txt);
-    if(!data||data.length===0){
-      // TSV fallback: replace tabs with commas
-      data=parseCSV(txt.replace(/\t/g,","));
+    // Proper TSV parser — handles quoted multi-line cells from Google Sheets paste
+    function parseTSV(text) {
+      const rows = [];
+      let row=[], cur="", inQ=false;
+      for (let i=0;i<text.length;i++) {
+        const c=text[i];
+        if (c==='"') { if(inQ&&text[i+1]==='"'){cur+='"';i++;} else inQ=!inQ; }
+        else if (c==='\t'&&!inQ) { row.push(cur.trim()); cur=""; }
+        else if (c==='\n'&&!inQ) { row.push(cur.trim()); rows.push(row); row=[]; cur=""; }
+        else if (c!=='\r') cur+=c;
+      }
+      if (cur||row.length) { row.push(cur.trim()); rows.push(row); }
+      return rows;
     }
-    if(!data||data.length===0){setErr("No data rows found. Try again.");return;}
-    onLoad(data);
+
+    const lines = parseTSV(txt);
+    const hi = lines.findIndex(r=>r.some(c=>c.toLowerCase().includes("customer name")));
+    if(hi<0){setErr("Could not find headers — make sure you copied the full sheet including the header row.");return;}
+
+    const H = lines[hi].map(h=>h.toLowerCase().replace(/[^a-z0-9 /]/g,"").trim());
+    const colExact=n=>H.findIndex(h=>h===n);
+    const col=(...ns)=>{ for(const n of ns){const i=H.findIndex(h=>h.includes(n));if(i>=0)return i;} return -1; };
+    const C={
+      name:col("customer name"),am:colExact("am"),csm:colExact("csm"),associate:col("associate"),
+      arr:col("arr"),channel:col("channel"),tier:col("tier"),stage:col("stage"),status:col("status"),
+      commit:col("delivery commit"),delivered:col("delivered so far"),
+      ut:col("users touched"),uh:col("happy users"),utest:col("user testimonials"),
+      it:col("influencers touched"),ih:col("happy influencers"),itest:col("influencer testimonials"),
+      st:col("sponsor touched"),sh:col("sponsor happy"),
+      pri:col("priority for next","next 1 week","priority"),
+      help:col("help from"),
+    };
+
+    const dataRows = lines.slice(hi+1)
+      .filter(r=>C.name>=0&&r[C.name]&&r[C.name].trim()&&r[C.name].trim()!=="-")
+      .map((r,i)=>{
+        const g=k=>k>=0&&r[k]?r[k].replace(/\n/g," ").trim():"";
+        const n=k=>{const v=g(k).replace(/[$,\s%]/g,"");return v===""||v==="-"||v.toUpperCase()==="N/A"?0:parseFloat(v)||0;};
+        const cl=v=>(!v||v==="-"||v.toUpperCase()==="N/A"||v==="")? null:v;
+        return {
+          id:i+1, name:g(C.name), am:g(C.am), csm:g(C.csm), associate:g(C.associate),
+          arr:n(C.arr), channel:g(C.channel)||"—", tier:g(C.tier)||"-", stage:g(C.stage)||"—",
+          status:g(C.status)||"Happy",
+          commit:n(C.commit)>0?n(C.commit):null, delivered:n(C.delivered)>0?n(C.delivered):null,
+          users:{reg:n(C.ut),happy:n(C.uh),test:n(C.utest)},
+          inf:{reg:n(C.it),happy:n(C.ih),test:n(C.itest)},
+          sponsor:{touched:n(C.st),happy:n(C.sh)},
+          priority:cl(g(C.pri)), help:cl(g(C.help)),
+        };
+      });
+
+    if(dataRows.length===0){setErr("No data rows found. Make sure your sheet has data below the header row.");return;}
+    onLoad(dataRows);
   }
   return (
     <div className="paste-screen">
