@@ -9,29 +9,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <style>
-:root {
-  --ink:#1A1818; --ink-soft:#7A7575; --rule:#E2DFDC; --paper:#F8F6F3; --white:#FFF;
-  --accent:#7744FF; --accent-lt:#EDE8FF; --accent-deep:#5A2FD6;
-  --red:#C0392B; --red-lt:#FBE9E7; --green:#1D7A4A; --green-lt:#E9F6EF;
-  --amber:#9A6A14; --amber-lt:#FFF1D6;
-  --serif:'Share',Georgia,serif; --sans:'Share',system-ui,sans-serif; --max:1600px;
+:root{
+  --ink:#1A1818;--ink-soft:#7A7575;--rule:#E2DFDC;--paper:#F8F6F3;--white:#FFF;
+  --accent:#7744FF;--accent-lt:#EDE8FF;--accent-deep:#5A2FD6;
+  --red:#C0392B;--red-lt:#FBE9E7;--green:#1D7A4A;--green-lt:#E9F6EF;
+  --amber:#9A6A14;--amber-lt:#FFF1D6;
+  --serif:'Share',Georgia,serif;--sans:'Share',system-ui,sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
 /* NAV */
 .nav{position:sticky;top:0;z-index:50;background:rgba(248,246,243,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);}
-.nav-in{max-width:var(--max);margin:0 auto;padding:12px 40px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.nav-in{margin:0 auto;padding:12px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
 .brand{font-weight:700;font-size:15px;} .brand b{color:var(--accent);}
 .nav-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .week-badge{font-size:11px;font-weight:600;color:var(--ink-soft);background:var(--white);border:1px solid var(--rule);padding:5px 12px;border-radius:30px;}
 .search-input{font-family:var(--sans);font-size:12px;background:var(--white);border:1px solid var(--rule);color:var(--ink);padding:6px 14px;border-radius:30px;outline:none;width:160px;}
 .search-input:focus{border-color:var(--accent);}
 .search-input::placeholder{color:var(--ink-soft);}
-.upd-btn{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-lt);border:1px solid var(--accent);padding:6px 14px;border-radius:30px;cursor:pointer;white-space:nowrap;}
+.upd-btn{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-lt);border:1px solid var(--accent);padding:6px 14px;border-radius:30px;cursor:pointer;}
 .upd-btn:hover{background:var(--accent);color:#fff;}
 .last-upd{font-size:11px;color:var(--ink-soft);}
 /* MAIN */
-.main{max-width:var(--max);margin:0 auto;padding:28px 40px 60px;display:flex;flex-direction:column;gap:24px;}
+.main{margin:0 auto;padding:24px 32px 60px;display:flex;flex-direction:column;gap:20px;}
 /* STATS */
 .eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
 .stat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
@@ -40,66 +40,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-fo
 .stat-value{font-family:var(--serif);font-size:26px;font-weight:400;line-height:1;}
 .stat-sub{font-size:10.5px;color:var(--ink-soft);margin-top:4px;}
 .sv-a{color:var(--accent);} .sv-g{color:var(--green);} .sv-r{color:var(--red);} .sv-b{color:var(--amber);}
-/* LT BANNER */
-.lt-banner{background:var(--red-lt);border:1px solid #f0c4bf;border-radius:12px;padding:12px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-.lt-label{font-size:13px;font-weight:700;color:var(--red);white-space:nowrap;}
-.lt-chip{font-family:var(--sans);font-size:11px;font-weight:600;background:var(--white);border:1px solid #f0c4bf;color:var(--red);padding:4px 12px;border-radius:30px;cursor:pointer;}
-.lt-chip:hover{background:var(--red);color:#fff;border-color:var(--red);}
-/* FILTER */
-.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--white);border:1px solid var(--rule);border-radius:12px;padding:11px 16px;}
-.fb-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
-.fb-div{width:1px;height:18px;background:var(--rule);flex-shrink:0;}
-.fg{display:flex;align-items:center;gap:5px;}
-.fg-label{font-size:10.5px;font-weight:600;color:var(--ink-soft);}
-.fsel{font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:20px;padding:4px 26px 4px 11px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A7575' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;}
-.fsel:hover{border-color:var(--accent);}
-.fsel.on{background-color:var(--accent-lt);border-color:var(--accent);color:var(--accent-deep);}
-.f-clear{font-family:var(--sans);font-size:11px;font-weight:600;color:var(--ink-soft);background:transparent;border:none;cursor:pointer;padding:4px 8px;border-radius:20px;}
-.f-clear:hover{color:var(--accent);background:var(--accent-lt);}
-.f-count{margin-left:auto;font-size:11px;color:var(--ink-soft);}
-/* TABLE ROWS */
-.tbl{width:100%;border-collapse:separate;border-spacing:0 6px;table-layout:fixed;}
-.tbl-head th{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);padding:4px 12px;text-align:left;white-space:nowrap;}
-.tbl-head th:nth-child(1){width:16%;}
-.tbl-head th:nth-child(2){width:7%;}
-.tbl-head th:nth-child(3){width:8%;}
-.tbl-head th:nth-child(4){width:8%;}
-.tbl-head th:nth-child(5){width:11%;}
-.tbl-head th:nth-child(6){width:9%;}
-.tbl-head th:nth-child(7){width:9%;}
-.tbl-head th:nth-child(8){width:9%;}
-.tbl-head th:nth-child(9){width:23%;}
-.tbl-row{background:var(--white);cursor:pointer;transition:all .15s;}
-.tbl-row:hover{box-shadow:0 3px 14px rgba(119,68,255,.08);}
-.tbl-row td{padding:14px 12px;vertical-align:middle;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);}
-.tbl-row td:first-child{border-left:1px solid var(--rule);border-radius:10px 0 0 10px;}
-.tbl-row td:last-child{border-right:1px solid var(--rule);border-radius:0 10px 10px 0;}
-.tbl-row.c-risk td:first-child{border-left:3px solid var(--amber);}
-.tbl-row.c-unhappy td:first-child,.tbl-row.c-churned td:first-child{border-left:3px solid var(--red);}
-.row-name{font-family:var(--serif);font-size:14px;font-weight:400;color:var(--ink);line-height:1.25;}
-.row-arr{font-size:13px;font-weight:700;color:var(--accent);}
-.row-chan{font-size:11px;color:var(--ink-soft);}
-.row-del{display:flex;align-items:center;gap:6px;min-width:110px;}
-.row-del-track{flex:1;height:4px;background:var(--rule);border-radius:2px;overflow:hidden;min-width:50px;}
-.row-del-fill{height:100%;border-radius:2px;}
-.df-g{background:var(--green);} .df-a{background:var(--amber);} .df-r{background:var(--red);} .df-p{background:var(--accent);}
-.row-del-pct{font-size:11px;font-weight:700;color:var(--ink-soft);white-space:nowrap;}
-.row-met{font-size:13px;font-weight:700;min-width:44px;text-align:center;}
-.m-g{color:var(--green);} .m-a{color:var(--amber);} .m-r{color:var(--red);}
-.row-met-sub{font-size:9.5px;color:var(--ink-soft);text-align:center;}
-.row-pri{font-size:11px;color:var(--amber);font-weight:600;max-width:240px;}
-.row-pri-line{display:block;line-height:1.4;word-break:break-word;}
-.row-help{font-size:11px;color:var(--red);font-weight:600;margin-top:4px;}
-.row-help-line{display:block;line-height:1.4;}
-/* PILL */
-.pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
-.p-happy{background:var(--green-lt);color:var(--green);}
-.p-risk{background:var(--amber-lt);color:var(--amber);}
-.p-unhappy,.p-churned{background:var(--red-lt);color:var(--red);}
-.pdot{width:5px;height:5px;border-radius:50%;display:inline-block;}
-.pd-happy{background:var(--green);} .pd-risk{background:var(--amber);} .pd-unhappy,.pd-churned{background:var(--red);}
-/* TAG */
-.tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--paper);border:1px solid var(--rule);color:var(--ink-soft);}
 /* TESTIMONIALS */
 .testi{background:#16172B;border-radius:16px;padding:26px;}
 .testi-eye{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#9B82FF;margin-bottom:16px;}
@@ -112,10 +52,52 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-fo
 .tcard-name{font-size:13px;font-weight:700;color:#fff;}
 .tcard-title{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px;}
 .tcard-co{display:inline-block;margin-top:5px;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:rgba(119,68,255,.2);border:1px solid rgba(119,68,255,.3);color:#9B82FF;padding:2px 8px;border-radius:10px;}
+/* FILTER */
+.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--white);border:1px solid var(--rule);border-radius:12px;padding:11px 16px;}
+.fb-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
+.fb-div{width:1px;height:18px;background:var(--rule);flex-shrink:0;}
+.fg{display:flex;align-items:center;gap:5px;}
+.fg-label{font-size:10.5px;font-weight:600;color:var(--ink-soft);}
+.fsel{font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:20px;padding:4px 26px 4px 11px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A7575' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;}
+.fsel:hover{border-color:var(--accent);}
+.fsel.on{background-color:var(--accent-lt);border-color:var(--accent);color:var(--accent-deep);}
+.f-clear{font-family:var(--sans);font-size:11px;font-weight:600;color:var(--ink-soft);background:transparent;border:none;cursor:pointer;padding:4px 8px;border-radius:20px;}
+.f-clear:hover{color:var(--accent);background:var(--accent-lt);}
+.f-count{margin-left:auto;font-size:11px;color:var(--ink-soft);}
+/* KANBAN */
+.kanban{display:grid;grid-template-columns:1fr 2fr 1fr;gap:16px;align-items:start;}
+.lane{background:var(--white);border:1px solid var(--rule);border-radius:14px;padding:16px;min-height:200px;}
+.lane-header{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--rule);}
+.lane-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.lane-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ld-red{background:var(--red);} .ld-amber{background:var(--amber);} .ld-green{background:var(--green);}
+.lane-meta{font-size:11px;color:var(--ink-soft);margin-top:4px;}
+.lane-cards{display:flex;flex-direction:column;gap:10px;}
+/* RISK SUB-SECTIONS */
+.risk-lane{background:var(--white);border:1px solid var(--rule);border-radius:14px;padding:16px;min-height:200px;}
+.risk-section{margin-bottom:16px;}
+.risk-section:last-child{margin-bottom:0;}
+.risk-sub-header{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;}
+.risk-sub-meta{font-size:10px;font-weight:400;color:var(--ink-soft);}
+/* CARDS */
+.kcard{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:14px;cursor:pointer;transition:all .15s;}
+.kcard:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(119,68,255,.08);}
+.kcard-name{font-family:var(--serif);font-size:15px;font-weight:400;color:var(--ink);line-height:1.2;}
+.kcard-arr{font-size:12px;font-weight:700;color:var(--accent);margin-top:2px;}
+.kcard-channel{font-size:10px;font-weight:500;color:var(--ink-soft);background:var(--white);border:1px solid var(--rule);padding:1px 7px;border-radius:10px;display:inline-block;margin-top:6px;}
+.kcard-metrics{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.kcard-chip{font-size:10px;font-weight:600;padding:3px 8px;border-radius:8px;display:inline-flex;align-items:center;gap:4px;}
+.chip-green{background:var(--green-lt);color:var(--green);}
+.chip-amber{background:var(--amber-lt);color:var(--amber);}
+.chip-red{background:var(--red-lt);color:var(--red);}
+.chip-neutral{background:var(--paper);color:var(--ink-soft);border:1px solid var(--rule);}
+.chip-purple{background:var(--accent-lt);color:var(--accent-deep);}
+.kcard-lt{font-size:11px;color:var(--red);font-weight:600;margin-top:8px;line-height:1.4;}
+.kcard-pri-count{font-size:10px;color:var(--amber);font-weight:600;margin-top:4px;}
 /* MODAL */
 .mo{display:none;position:fixed;inset:0;background:rgba(26,24,24,.55);z-index:50;align-items:center;justify-content:center;padding:24px;}
 .mo.open{display:flex;}
-.mb{background:var(--white);border:1px solid var(--rule);border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.14);}
+.mb{background:var(--white);border:1px solid var(--rule);border-radius:16px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.14);}
 .mh{padding:20px 22px 14px;border-bottom:1px solid var(--rule);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
 .mh-name{font-family:var(--serif);font-size:20px;font-weight:400;}
 .mh-meta{display:flex;align-items:center;gap:8px;margin-top:5px;flex-wrap:wrap;}
@@ -129,6 +111,12 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-fo
 .mc{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:10px;text-align:center;}
 .mc-val{font-family:var(--serif);font-size:18px;font-weight:400;}
 .mc-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px;}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.p-happy{background:var(--green-lt);color:var(--green);}
+.p-risk{background:var(--amber-lt);color:var(--amber);}
+.p-churned{background:var(--red-lt);color:var(--red);}
+.p-cold{background:#E8E8E8;color:#666;}
+.tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--paper);border:1px solid var(--rule);color:var(--ink-soft);}
 .pbox{background:var(--amber-lt);border:1px solid #e8d0a0;border-radius:10px;padding:11px 13px;}
 .pbox .lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:4px;}
 .pbox .val{font-size:13px;color:var(--ink);font-weight:500;line-height:1.5;}
@@ -139,23 +127,17 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-fo
 .hbox.on .lbl{color:var(--red);} .hbox.off .lbl{color:var(--ink-soft);}
 .hbox .val{font-size:13px;font-weight:600;}
 .hbox.on .val{color:var(--red);} .hbox.off .val{color:var(--ink-soft);font-style:italic;}
-/* PASTE SCREEN */
+/* PASTE */
 .paste-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 24px;background:var(--paper);}
 .paste-box{width:100%;max-width:540px;background:var(--white);border:1px solid var(--rule);border-radius:16px;padding:28px;}
-.paste-title{font-family:var(--serif);font-size:24px;font-weight:400;color:var(--ink);margin-bottom:4px;text-align:center;}
-.paste-title b{color:var(--accent);}
-.paste-sub{font-size:13px;color:var(--ink-soft);text-align:center;margin-bottom:24px;}
-.paste-step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start;}
-.paste-num{width:22px;height:22px;border-radius:50%;background:var(--accent-lt);color:var(--accent);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.paste-text-lbl{font-size:13px;color:var(--ink);}
 .paste-ta{width:100%;margin-top:16px;height:100px;font-family:var(--sans);font-size:12px;padding:10px 12px;border:1px solid var(--rule);border-radius:10px;outline:none;resize:vertical;background:var(--paper);color:var(--ink);}
 .paste-ta:focus{border-color:var(--accent);}
 .paste-err{color:var(--red);font-size:12px;margin-top:8px;}
-.paste-btn{margin-top:14px;width:100%;font-family:var(--sans);font-size:13px;font-weight:700;color:#fff;border:none;border-radius:30px;padding:11px 0;cursor:pointer;transition:background .15s;}
-/* FOOTER */
+.paste-btn{margin-top:14px;width:100%;font-family:var(--sans);font-size:13px;font-weight:700;color:#fff;border:none;border-radius:30px;padding:11px 0;cursor:pointer;}
+.paste-step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start;}
+.paste-num{width:22px;height:22px;border-radius:50%;background:var(--accent-lt);color:var(--accent);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .footer{border-top:1px solid var(--rule);padding-top:14px;display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);flex-wrap:wrap;gap:8px;}
-.empty{text-align:center;padding:60px;color:var(--ink-soft);font-size:14px;}
-@keyframes spin{to{transform:rotate(360deg);}}
+.empty{text-align:center;padding:40px;color:var(--ink-soft);font-size:13px;}
 </style>
 </head>
 <body>
@@ -173,26 +155,22 @@ const TESTIMONIALS = [{
   name:"Gohar Malik", title:"Consultant - IT Programs & Funding", company:"SSI", initials:"GM",
 }];
 
-// ── CSV PARSER (handles quoted multi-line cells) ──
-function parseCSV(text) {
-  // Tokenise respecting RFC 4180 quoted fields
-  const rows = [];
-  let row=[], cur="", inQ=false;
-  for (let i=0;i<text.length;i++) {
+// ── CSV PARSER ──
+function parseCSV(text){
+  const rows=[];let row=[],cur="",inQ=false;
+  for(let i=0;i<text.length;i++){
     const c=text[i];
-    if (c==='"') { if(inQ&&text[i+1]==='"'){cur+='"';i++;} else inQ=!inQ; }
-    else if (c===','&&!inQ) { row.push(cur.trim()); cur=""; }
-    else if (c==='\n'&&!inQ) { row.push(cur.trim()); rows.push(row); row=[]; cur=""; }
-    else if (c!=='\r') cur+=c;
+    if(c==='"'){if(inQ&&text[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+    else if(c===','&&!inQ){row.push(cur.trim());cur="";}
+    else if(c==='\n'&&!inQ){row.push(cur.trim());rows.push(row);row=[];cur="";}
+    else if(c!=='\r')cur+=c;
   }
-  if (cur||row.length) { row.push(cur.trim()); rows.push(row); }
-
-  const hi = rows.findIndex(r=>r.some(c=>c.toLowerCase().includes("customer name")));
-  if (hi<0) return [];
-  const H = rows[hi].map(h=>h.toLowerCase().replace(/[^a-z0-9 /]/g,"").trim());
-  // Exact match first, then partial match
+  if(cur||row.length){row.push(cur.trim());rows.push(row);}
+  const hi=rows.findIndex(r=>r.some(c=>c.toLowerCase().includes("customer name")));
+  if(hi<0)return[];
+  const H=rows[hi].map(h=>h.toLowerCase().replace(/[^a-z0-9 /]/g,"").trim());
   const colExact=n=>H.findIndex(h=>h===n);
-  const col=(...ns)=>{ for(const n of ns){const i=H.findIndex(h=>h.includes(n));if(i>=0)return i;} return -1; };
+  const col=(...ns)=>{for(const n of ns){const i=H.findIndex(h=>h.includes(n));if(i>=0)return i;}return -1;};
   const C={
     name:col("customer name"),am:colExact("am"),csm:colExact("csm"),associate:col("associate"),
     arr:col("arr"),channel:col("channel"),tier:col("tier"),stage:col("stage"),status:col("status"),
@@ -200,84 +178,84 @@ function parseCSV(text) {
     ut:col("users touched"),uh:col("happy users"),utest:col("user testimonials"),
     it:col("influencers touched"),ih:col("happy influencers"),itest:col("influencer testimonials"),
     st:col("sponsor touched"),sh:col("sponsor happy"),
+    daysSpnsr:col("days since sponsor"),
+    advocacy:col("advocacy"),
+    opportunity:col("opportunity"),
+    meetings:col("meeting"),
+    productivity:col("productivity"),
     pri:col("priority for next","next 1 week","priority"),
     help:col("help from"),
   };
-
-  let enPipelineARR = 0;
-
-  const filtered_rows = rows.slice(hi+1).filter(r=>{
-    if(!r[C.name]||!r[C.name].trim()||r[C.name].trim()==="-") return false;
+  let enPipelineARR=0;
+  const filtered=rows.slice(hi+1).filter(r=>{
+    if(!r[C.name]||!r[C.name].trim()||r[C.name].trim()==="-")return false;
     if(r[C.name].trim().toLowerCase().includes("pipeline")){
       const v=C.arr>=0&&r[C.arr]?r[C.arr].replace(/[$,\s%]/g,""):"0";
-      enPipelineARR=parseFloat(v)||0;
-      return false;
+      enPipelineARR=parseFloat(v)||0;return false;
     }
     return C.name>=0;
   });
-
-  const accounts = filtered_rows.map((r,i)=>{
+  const accounts=filtered.map((r,i)=>{
     const g=k=>k>=0&&r[k]?r[k].replace(/\n/g," ").trim():"";
-    const n=k=>{const v=g(k).replace(/[$, %]/g,"");return v===""||v==="-"||v.toUpperCase()==="N/A"?0:parseFloat(v)||0;};
+    const n=k=>{const v=g(k).replace(/[$,\s%]/g,"");return v===""||v==="-"||v.toUpperCase()==="N/A"?0:parseFloat(v)||0;};
     const cl=v=>(!v||v==="-"||v.toUpperCase()==="N/A"||v==="")? null:v;
+    // Parse advocacy count from "Yes - X people" or "No"
+    const advRaw=g(C.advocacy);
+    let advocacyCount=0;
+    if(advRaw.toLowerCase().startsWith("yes")){
+      const m=advRaw.match(/(\d+)/);
+      advocacyCount=m?parseInt(m[1]):1;
+    }
     return {
-      id:i+1, name:g(C.name), am:g(C.am), csm:g(C.csm), associate:g(C.associate),
-      arr:n(C.arr), channel:g(C.channel)||"—", tier:g(C.tier)||"-", stage:g(C.stage)||"—",
+      id:i+1,name:g(C.name),am:g(C.am),csm:g(C.csm),associate:g(C.associate),
+      arr:n(C.arr),channel:g(C.channel)||"—",tier:g(C.tier)||"-",stage:g(C.stage)||"—",
       status:g(C.status)||"Happy",
-      commit:n(C.commit)>0?n(C.commit):null, delivered:n(C.delivered)>0?n(C.delivered):null,
+      commit:n(C.commit)>0?n(C.commit):null,delivered:n(C.delivered)>0?n(C.delivered):null,
       users:{reg:n(C.ut),happy:n(C.uh),test:n(C.utest)},
       inf:{reg:n(C.it),happy:n(C.ih),test:n(C.itest)},
       sponsor:{touched:n(C.st),happy:n(C.sh)},
-      priority:cl(g(C.pri)), help:cl(g(C.help)),
+      daysSponsor:n(C.daysSpnsr),
+      advocacyCount,
+      advocacyRaw:advRaw,
+      opportunity:cl(g(C.opportunity)),
+      meetings:cl(g(C.meetings)),
+      productivity:cl(g(C.productivity)),
+      priority:cl(g(C.pri)),help:cl(g(C.help)),
     };
   });
-
-  accounts._enPipeline = enPipelineARR;
+  accounts._enPipeline=enPipelineARR;
   return accounts;
 }
 
 const fmtARR=v=>v>=1e6?`$${(v/1e6).toFixed(1)}M`:v>=1e3?`$${(v/1e3).toFixed(0)}K`:v>0?`$${v}`:"TBD";
 const pct=(a,b)=>(!b||b===0)?null:Math.round(a/b*100);
-const ORDER={Happy:0,"At Risk":1,Unhappy:2,Churned:3};
 const splitLines=s=>s?s.split(/(?=\d+\.)/).map(x=>x.trim()).filter(Boolean):[];
+const countPri=s=>s?s.split(/(?=\d+\.)/).filter(x=>x.trim()).length:0;
 
 function Pill({s}){
-  const m={Happy:["p-happy","pd-happy"],"At Risk":["p-risk","pd-risk"],Unhappy:["p-unhappy","pd-unhappy"],Churned:["p-churned","pd-churned"]};
-  const [pc,dc]=m[s]||["p-happy","pd-happy"];
-  return <span className={`pill ${pc}`}><span className={`pdot ${dc}`}/>{s}</span>;
+  const cls=s.includes("Cold")?"p-cold":s.includes("Risk")?"p-risk":s.includes("Churned")?"p-churned":"p-happy";
+  const label=s.replace("At Risk - ","").replace("At Risk","At Risk");
+  return <span className={`pill ${cls}`}>{label}</span>;
 }
 
-function Row({a,onClick}){
-  const bc=a.status==="At Risk"?"c-risk":a.status==="Unhappy"?"c-unhappy":a.status==="Churned"?"c-churned":"";
-  const p=pct(a.delivered,a.commit);
-  const barW=p===null?0:Math.min(p,100);
-  const barCls=p===null?"df-p":p>=100?"df-p":p>=50?"df-g":p>=25?"df-a":"df-r";
-  const mc=(v,t)=>{const c=v===null?"":v>=67?"m-g":v>=34?"m-a":"m-r"; return {val:v!==null?`${v}%`:"—",cls:`row-met ${c}`,sub:`${t} touched`};};
-  const up=mc(pct(a.users.happy,a.users.reg),a.users.reg);
-  const ip=mc(pct(a.inf.happy,a.inf.reg),a.inf.reg);
-  const sp=mc(pct(a.sponsor.happy,a.sponsor.touched),a.sponsor.touched);
-  const priLines=splitLines(a.priority);
-  const helpLines=splitLines(a.help);
-  return (
-    <tr className={`tbl-row ${bc}`} onClick={()=>onClick(a)}>
-      <td><div className="row-name">{a.name}</div></td>
-      <td><div className="row-arr">{fmtARR(a.arr)}</div></td>
-      <td><Pill s={a.status}/></td>
-      <td className="row-chan">{a.channel}</td>
-      <td>
-        <div className="row-del">
-          <div className="row-del-track"><div className={`row-del-fill ${barCls}`} style={{width:`${barW}%`}}/></div>
-          <span className="row-del-pct">{p===null?"N/A":`${p}%`}</span>
-        </div>
-      </td>
-      <td><div className={up.cls}>{up.val}</div><div className="row-met-sub">{up.sub}</div></td>
-      <td><div className={ip.cls}>{ip.val}</div><div className="row-met-sub">{ip.sub}</div></td>
-      <td><div className={sp.cls}>{sp.val}</div><div className="row-met-sub">{sp.sub}</div></td>
-      <td>
-        {priLines.length>0&&<div className="row-pri">{priLines.map((l,i)=><span key={i} className="row-pri-line">↗ {l}</span>)}</div>}
-        {helpLines.length>0&&<div className="row-help">{helpLines.map((l,i)=><span key={i} className="row-help-line">● LT: {l}</span>)}</div>}
-      </td>
-    </tr>
+function KCard({a,onClick}){
+  const dsCls=a.daysSponsor>90?"chip-red":a.daysSponsor>60?"chip-amber":"chip-green";
+  const priCount=countPri(a.priority);
+  return(
+    <div className="kcard" onClick={()=>onClick(a)}>
+      <div className="kcard-name">{a.name}</div>
+      <div className="kcard-arr">{fmtARR(a.arr)}</div>
+      <span className="kcard-channel">{a.channel}</span>
+      <div className="kcard-metrics">
+        {a.advocacyCount>0
+          ?<span className="kcard-chip chip-green">👤 {a.advocacyCount} advocate{a.advocacyCount>1?"s":""}</span>
+          :<span className="kcard-chip chip-neutral">👤 No advocates</span>
+        }
+        <span className={`kcard-chip ${dsCls}`}>📅 {a.daysSponsor}d sponsor</span>
+        {priCount>0&&<span className="kcard-chip chip-purple">📋 {priCount} action{priCount>1?"s":""}</span>}
+      </div>
+      {a.help&&<div className="kcard-lt">● LT: {a.help}</div>}
+    </div>
   );
 }
 
@@ -288,10 +266,10 @@ function MCell({val,label,color}){
 function Modal({a,onClose}){
   if(!a)return null;
   const p=pct(a.delivered,a.commit);
-  const pc2=p===null?"var(--accent)":p>=100?"var(--accent)":p>=50?"var(--green)":p>=25?"var(--amber)":"var(--red)";
+  const pc=p===null?"var(--accent)":p>=100?"var(--accent)":p>=50?"var(--green)":p>=25?"var(--amber)":"var(--red)";
   const priLines=splitLines(a.priority);
   const helpLines=splitLines(a.help);
-  return (
+  return(
     <div className="mo open" onClick={onClose}>
       <div className="mb" onClick={e=>e.stopPropagation()}>
         <div className="mh">
@@ -314,18 +292,30 @@ function Modal({a,onClose}){
             <div className="m3">
               <MCell val={a.commit??<span style={{color:"var(--ink-soft)",fontStyle:"italic",fontSize:13}}>N/A</span>} label="Contracted"/>
               <MCell val={a.delivered??<span style={{color:"var(--ink-soft)",fontStyle:"italic",fontSize:13}}>N/A</span>} label="Delivered"/>
-              <MCell val={p===null?"N/A":`${p}%`} label="Progress" color={pc2}/>
+              <MCell val={p===null?"N/A":`${p}%`} label="Progress" color={pc}/>
             </div>
           </div>
-          <div><div className="ms-title">Users</div>
-            <div className="m3"><MCell val={a.users.reg} label="Touched"/><MCell val={a.users.happy} label="Happy" color="var(--green)"/><MCell val={a.users.test} label="Testimonials" color="var(--accent)"/></div>
+          <div><div className="ms-title">Engagement</div>
+            <div className="m3">
+              <MCell val={a.advocacyCount} label="Advocates" color={a.advocacyCount>0?"var(--green)":"var(--red)"}/>
+              <MCell val={`${a.daysSponsor}d`} label="Sponsor Touch" color={a.daysSponsor>90?"var(--red)":a.daysSponsor>60?"var(--amber)":"var(--green)"}/>
+              <MCell val={a.opportunity||"—"} label="Opportunity"/>
+            </div>
           </div>
-          <div><div className="ms-title">Influencers</div>
-            <div className="m3"><MCell val={a.inf.reg} label="Touched"/><MCell val={a.inf.happy} label="Happy" color="var(--green)"/><MCell val={a.inf.test} label="Testimonials" color="var(--accent)"/></div>
+          <div><div className="ms-title">Users & Influencers</div>
+            <div className="m3">
+              <MCell val={a.users.reg} label="Users Touched"/>
+              <MCell val={a.users.happy} label="Happy Users" color="var(--green)"/>
+              <MCell val={a.users.test} label="User Testimonials" color="var(--accent)"/>
+            </div>
+            <div className="m3" style={{marginTop:7}}>
+              <MCell val={a.inf.reg} label="Inf Touched"/>
+              <MCell val={a.inf.happy} label="Happy Inf" color="var(--green)"/>
+              <MCell val={a.inf.test} label="Inf Testimonials" color="var(--accent)"/>
+            </div>
           </div>
-          <div><div className="ms-title">Sponsor</div>
-            <div className="m2"><MCell val={a.sponsor.touched} label="Touched"/><MCell val={a.sponsor.happy} label="Happy" color={a.sponsor.happy>0?"var(--green)":"var(--red)"}/></div>
-          </div>
+          {a.productivity&&<div><div className="ms-title">Productivity</div><div style={{fontSize:13,color:"var(--ink)",lineHeight:1.5,background:"var(--paper)",border:"1px solid var(--rule)",borderRadius:10,padding:"10px 13px"}}>{a.productivity}</div></div>}
+          {a.meetings&&<div><div className="ms-title">Meetings / Intros</div><div style={{fontSize:13,color:"var(--ink)",background:"var(--paper)",border:"1px solid var(--rule)",borderRadius:10,padding:"10px 13px"}}>{a.meetings}</div></div>}
           <div><div className="ms-title">This Week</div>
             {priLines.length>0
               ?<div className="pbox"><div className="lbl">Priority</div><div className="val">{priLines.map((l,i)=><span key={i} style={{display:"block"}}>{l}</span>)}</div></div>
@@ -343,19 +333,15 @@ function Modal({a,onClose}){
 }
 
 function Testi(){
-  return (
+  return(
     <div className="testi">
       <div className="testi-eye">🌟 Testimonials this week</div>
       {TESTIMONIALS.map(t=>(
         <div key={t.id} className="tcard">
-          <div className="tcard-quote">" {t.quote} <em>{t.highlight}</em> "</div>
+          <div className="tcard-quote">" {t.quote} <em>{t.highlight}</em> {t.tail}"</div>
           <div className="tcard-person">
             <div className="tcard-av">{t.initials}</div>
-            <div>
-              <div className="tcard-name">{t.name}</div>
-              <div className="tcard-title">{t.title}</div>
-              <span className="tcard-co">{t.company}</span>
-            </div>
+            <div><div className="tcard-name">{t.name}</div><div className="tcard-title">{t.title}</div><span className="tcard-co">{t.company}</span></div>
           </div>
         </div>
       ))}
@@ -364,32 +350,28 @@ function Testi(){
 }
 
 function PasteScreen({onLoad}){
-  const [txt,setTxt]=useState("");
-  const [err,setErr]=useState("");
+  const[txt,setTxt]=useState("");
+  const[err,setErr]=useState("");
   function load(){
     setErr("");
-    // Proper TSV parser — handles quoted multi-line cells from Google Sheets paste
-    function parseTSV(text) {
-      const rows = [];
-      let row=[], cur="", inQ=false;
-      for (let i=0;i<text.length;i++) {
+    function parseTSV(text){
+      const rows=[];let row=[],cur="",inQ=false;
+      for(let i=0;i<text.length;i++){
         const c=text[i];
-        if (c==='"') { if(inQ&&text[i+1]==='"'){cur+='"';i++;} else inQ=!inQ; }
-        else if (c==='\t'&&!inQ) { row.push(cur.trim()); cur=""; }
-        else if (c==='\n'&&!inQ) { row.push(cur.trim()); rows.push(row); row=[]; cur=""; }
-        else if (c!=='\r') cur+=c;
+        if(c==='"'){if(inQ&&text[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+        else if(c==='\t'&&!inQ){row.push(cur.trim());cur="";}
+        else if(c==='\n'&&!inQ){row.push(cur.trim());rows.push(row);row=[];cur="";}
+        else if(c!=='\r')cur+=c;
       }
-      if (cur||row.length) { row.push(cur.trim()); rows.push(row); }
+      if(cur||row.length){row.push(cur.trim());rows.push(row);}
       return rows;
     }
-
-    const lines = parseTSV(txt);
-    const hi = lines.findIndex(r=>r.some(c=>c.toLowerCase().includes("customer name")));
-    if(hi<0){setErr("Could not find headers — make sure you copied the full sheet including the header row.");return;}
-
-    const H = lines[hi].map(h=>h.toLowerCase().replace(/[^a-z0-9 /]/g,"").trim());
+    const lines=parseTSV(txt);
+    const hi=lines.findIndex(r=>r.some(c=>c.toLowerCase().includes("customer name")));
+    if(hi<0){setErr("Could not find headers.");return;}
+    const H=lines[hi].map(h=>h.toLowerCase().replace(/[^a-z0-9 /]/g,"").trim());
     const colExact=n=>H.findIndex(h=>h===n);
-    const col=(...ns)=>{ for(const n of ns){const i=H.findIndex(h=>h.includes(n));if(i>=0)return i;} return -1; };
+    const col=(...ns)=>{for(const n of ns){const i=H.findIndex(h=>h.includes(n));if(i>=0)return i;}return -1;};
     const C={
       name:col("customer name"),am:colExact("am"),csm:colExact("csm"),associate:col("associate"),
       arr:col("arr"),channel:col("channel"),tier:col("tier"),stage:col("stage"),status:col("status"),
@@ -397,137 +379,129 @@ function PasteScreen({onLoad}){
       ut:col("users touched"),uh:col("happy users"),utest:col("user testimonials"),
       it:col("influencers touched"),ih:col("happy influencers"),itest:col("influencer testimonials"),
       st:col("sponsor touched"),sh:col("sponsor happy"),
+      daysSpnsr:col("days since sponsor"),
+      advocacy:col("advocacy"),
+      opportunity:col("opportunity"),
+      meetings:col("meeting"),
+      productivity:col("productivity"),
       pri:col("priority for next","next 1 week","priority"),
       help:col("help from"),
     };
-
-    let enPipelineARR = 0;
-    const dataRows = lines.slice(hi+1)
-      .filter(r=>{
-        if(!r[C.name]||!r[C.name].trim()||r[C.name].trim()==="-") return false;
-        if(r[C.name].trim().toLowerCase().includes("pipeline")){
-          const v=C.arr>=0&&r[C.arr]?r[C.arr].replace(/[$,\s%]/g,""):"0";
-          enPipelineARR=parseFloat(v)||0;
-          return false;
-        }
-        return C.name>=0;
-      })
-      .map((r,i)=>{
-        const g=k=>k>=0&&r[k]?r[k].replace(/\n/g," ").trim():"";
-        const n=k=>{const v=g(k).replace(/[$,\s%]/g,"");return v===""||v==="-"||v.toUpperCase()==="N/A"?0:parseFloat(v)||0;};
-        const cl=v=>(!v||v==="-"||v.toUpperCase()==="N/A"||v==="")? null:v;
-        return {
-          id:i+1, name:g(C.name), am:g(C.am), csm:g(C.csm), associate:g(C.associate),
-          arr:n(C.arr), channel:g(C.channel)||"—", tier:g(C.tier)||"-", stage:g(C.stage)||"—",
-          status:g(C.status)||"Happy",
-          commit:n(C.commit)>0?n(C.commit):null, delivered:n(C.delivered)>0?n(C.delivered):null,
-          users:{reg:n(C.ut),happy:n(C.uh),test:n(C.utest)},
-          inf:{reg:n(C.it),happy:n(C.ih),test:n(C.itest)},
-          sponsor:{touched:n(C.st),happy:n(C.sh)},
-          priority:cl(g(C.pri)), help:cl(g(C.help)),
-        };
-      });
-
-    if(dataRows.length===0){setErr("No data rows found. Make sure your sheet has data below the header row.");return;}
-    dataRows._enPipeline = enPipelineARR;
+    let enPipelineARR=0;
+    const dataRows=lines.slice(hi+1).filter(r=>{
+      if(!r[C.name]||!r[C.name].trim()||r[C.name].trim()==="-")return false;
+      if(r[C.name].trim().toLowerCase().includes("pipeline")){
+        const v=C.arr>=0&&r[C.arr]?r[C.arr].replace(/[$,\s%]/g,""):"0";
+        enPipelineARR=parseFloat(v)||0;return false;
+      }
+      return C.name>=0;
+    }).map((r,i)=>{
+      const g=k=>k>=0&&r[k]?r[k].replace(/\n/g," ").trim():"";
+      const n=k=>{const v=g(k).replace(/[$,\s%]/g,"");return v===""||v==="-"||v.toUpperCase()==="N/A"?0:parseFloat(v)||0;};
+      const cl=v=>(!v||v==="-"||v.toUpperCase()==="N/A"||v==="")? null:v;
+      const advRaw=g(C.advocacy);
+      let advocacyCount=0;
+      if(advRaw.toLowerCase().startsWith("yes")){const m=advRaw.match(/(\d+)/);advocacyCount=m?parseInt(m[1]):1;}
+      return {
+        id:i+1,name:g(C.name),am:g(C.am),csm:g(C.csm),associate:g(C.associate),
+        arr:n(C.arr),channel:g(C.channel)||"—",tier:g(C.tier)||"-",stage:g(C.stage)||"—",
+        status:g(C.status)||"Happy",
+        commit:n(C.commit)>0?n(C.commit):null,delivered:n(C.delivered)>0?n(C.delivered):null,
+        users:{reg:n(C.ut),happy:n(C.uh),test:n(C.utest)},
+        inf:{reg:n(C.it),happy:n(C.ih),test:n(C.itest)},
+        sponsor:{touched:n(C.st),happy:n(C.sh)},
+        daysSponsor:n(C.daysSpnsr),advocacyCount,advocacyRaw:advRaw,
+        opportunity:cl(g(C.opportunity)),meetings:cl(g(C.meetings)),productivity:cl(g(C.productivity)),
+        priority:cl(g(C.pri)),help:cl(g(C.help)),
+      };
+    });
+    if(!dataRows.length){setErr("No data rows found.");return;}
+    dataRows._enPipeline=enPipelineARR;
     onLoad(dataRows);
   }
-  return (
-    <div className="paste-screen">
-      <div>
-        <div style={{textAlign:"center",marginBottom:28}}>
-          <div style={{fontFamily:"var(--serif)",fontSize:26,color:"var(--ink)"}}><b style={{color:"var(--accent)"}}>vieu</b> · Customer Dashboard</div>
-          <div style={{fontSize:13,color:"var(--ink-soft)",marginTop:6}}>Copy your Google Sheet and paste below to load the dashboard.</div>
-        </div>
-        <div className="paste-box">
-          <div style={{fontSize:11,fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",color:"var(--accent)",marginBottom:16}}>How to load</div>
-          {[["1","Open your Google Sheet"],["2","Press Cmd+A / Ctrl+A to select all"],["3","Press Cmd+C / Ctrl+C to copy"],["4","Paste below and click Load"]].map(([n,t])=>(
-            <div key={n} className="paste-step">
-              <span className="paste-num">{n}</span>
-              <span className="paste-text-lbl">{t}</span>
-            </div>
-          ))}
-          <textarea className="paste-ta" placeholder="Paste sheet data here…" value={txt} onChange={e=>setTxt(e.target.value)}/>
-          {err&&<div className="paste-err">{err}</div>}
-          <button className="paste-btn" style={{background:txt.trim()?"var(--accent)":"var(--rule)",cursor:txt.trim()?"pointer":"not-allowed"}} disabled={!txt.trim()} onClick={load}>Load Dashboard →</button>
-        </div>
+  return(
+    <div className="paste-screen"><div>
+      <div style={{textAlign:"center",marginBottom:28}}>
+        <div style={{fontFamily:"var(--serif)",fontSize:26,color:"var(--ink)"}}><b style={{color:"var(--accent)"}}>vieu</b> · Customer Dashboard</div>
+        <div style={{fontSize:13,color:"var(--ink-soft)",marginTop:6}}>Copy your Google Sheet and paste below.</div>
       </div>
-    </div>
+      <div className="paste-box">
+        <div style={{fontSize:11,fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",color:"var(--accent)",marginBottom:16}}>How to load</div>
+        {[["1","Open your Google Sheet"],["2","Cmd+A / Ctrl+A to select all"],["3","Cmd+C / Ctrl+C to copy"],["4","Paste below and click Load"]].map(([n,t])=>(
+          <div key={n} className="paste-step"><span className="paste-num">{n}</span><span style={{fontSize:13,color:"var(--ink)"}}>{t}</span></div>
+        ))}
+        <textarea className="paste-ta" placeholder="Paste sheet data here…" value={txt} onChange={e=>setTxt(e.target.value)}/>
+        {err&&<div className="paste-err">{err}</div>}
+        <button className="paste-btn" style={{background:txt.trim()?"var(--accent)":"var(--rule)",cursor:txt.trim()?"pointer":"not-allowed"}} disabled={!txt.trim()} onClick={load}>Load Dashboard →</button>
+      </div>
+    </div></div>
   );
 }
 
 function App(){
-  const [data,setData]=useState(null);
-  const [lastUpd,setLastUpd]=useState(null);
-  const [filters,setFilters]=useState({status:"all",am:"all",csm:"all",associate:"all",channel:"all",stage:"all"});
-  const [search,setSearch]=useState("");
-  const [selected,setSelected]=useState(null);
-  const [loadErr,setLoadErr]=useState("");
+  const[data,setData]=useState(null);
+  const[lastUpd,setLastUpd]=useState(null);
+  const[filters,setFilters]=useState({am:"all",csm:"all",associate:"all",channel:"all",stage:"all"});
+  const[search,setSearch]=useState("");
+  const[selected,setSelected]=useState(null);
 
-  // Try auto-fetch on mount
   React.useEffect(()=>{
     fetch(SHEET_URL,{cache:"no-store"})
       .then(r=>r.ok?r.text():Promise.reject(r.status))
-      .then(txt=>{
-        const d=parseCSV(txt);
-        if(d&&d.length>0){setData(d);setLastUpd(new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));}
-      })
-      .catch(()=>{}); // silent fail — paste screen shown
+      .then(txt=>{const d=parseCSV(txt);if(d&&d.length>0){setData(d);setLastUpd(new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));}})
+      .catch(()=>{});
   },[]);
 
   function handlePaste(d){setData(d);setLastUpd(new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));}
 
-  if(!data) return <PasteScreen onLoad={handlePaste}/>;
+  if(!data)return <PasteScreen onLoad={handlePaste}/>;
 
   const setF=(k,v)=>setFilters(f=>({...f,[k]:v}));
-  const clearAll=()=>setFilters({status:"all",am:"all",csm:"all",associate:"all",channel:"all",stage:"all"});
+  const clearAll=()=>setFilters({am:"all",csm:"all",associate:"all",channel:"all",stage:"all"});
   const active=Object.values(filters).filter(v=>v!=="all").length;
   const uniq=k=>["all",...new Set(data.map(a=>a[k]).filter(Boolean).map(v=>String(v).trim()).filter(v=>v&&v!=="-"))];
 
-  const happy=data.filter(a=>a.status==="Happy");
-  const atRisk=data.filter(a=>a.status==="At Risk");
-  const unhappy=data.filter(a=>a.status==="Unhappy");
-  const churned=data.filter(a=>a.status==="Churned");
-  const needsLT=data.filter(a=>a.help);
-  const totalARR=data.reduce((s,a)=>s+a.arr,0);
-  const healthyARR=happy.reduce((s,a)=>s+a.arr,0);
-  const riskARR=atRisk.reduce((s,a)=>s+a.arr,0);
-  const unhappyARR=unhappy.reduce((s,a)=>s+a.arr,0);
-  const churnedARR=churned.reduce((s,a)=>s+a.arr,0);
-  const enPipeline=data._enPipeline||0;
-  const totalU=data.reduce((s,a)=>s+a.users.reg,0);
-  const happyU=data.reduce((s,a)=>s+a.users.happy,0);
-  const totalT=data.reduce((s,a)=>s+a.users.test+a.inf.test,0);
-
-  const FDEFS=[
-    {k:"status",l:"Status",all:"All Statuses"},{k:"am",l:"AM",all:"All AMs"},{k:"csm",l:"CSM",all:"All CSMs"},
-    {k:"associate",l:"Associate",all:"All Associates"},{k:"channel",l:"Channel",all:"All Channels"},{k:"stage",l:"Stage",all:"All Stages"},
-  ];
-
   const filtered=data
-    .filter(a=>filters.status==="all"||a.status===filters.status)
     .filter(a=>filters.am==="all"||a.am===filters.am)
     .filter(a=>filters.csm==="all"||a.csm===filters.csm)
     .filter(a=>filters.associate==="all"||a.associate===filters.associate)
     .filter(a=>filters.channel==="all"||a.channel===filters.channel)
     .filter(a=>filters.stage==="all"||a.stage===filters.stage)
-    .filter(a=>!search||a.name.toLowerCase().includes(search.toLowerCase()))
-    .sort((a,b)=>{ const s=(ORDER[a.status]??4)-(ORDER[b.status]??4); return s!==0?s:b.arr-a.arr; });
+    .filter(a=>!search||a.name.toLowerCase().includes(search.toLowerCase()));
+
+  const churned=filtered.filter(a=>a.status.toLowerCase().includes("churned"));
+  const riskExt=filtered.filter(a=>a.status.includes("External"));
+  const riskCold=filtered.filter(a=>a.status.includes("Cold"));
+  const riskBuild=filtered.filter(a=>a.status.includes("Build Advocacy")||a.status.includes("Build"));
+  const allRisk=[...riskExt,...riskCold,...riskBuild];
+  const happy=filtered.filter(a=>a.status==="Happy");
+
+  const totalARR=data.reduce((s,a)=>s+a.arr,0);
+  const healthyARR=data.filter(a=>a.status==="Happy").reduce((s,a)=>s+a.arr,0);
+  const riskARR=data.filter(a=>a.status.includes("Risk")).reduce((s,a)=>s+a.arr,0);
+  const enPipeline=data._enPipeline||0;
+  const totalAdvocates=data.reduce((s,a)=>s+a.advocacyCount,0);
+  const totalTests=data.reduce((s,a)=>s+a.users.test+a.inf.test,0);
+
+  const FDEFS=[
+    {k:"am",l:"AM",all:"All AMs"},{k:"csm",l:"CSM",all:"All CSMs"},
+    {k:"associate",l:"Associate",all:"All Associates"},{k:"channel",l:"Channel",all:"All Channels"},{k:"stage",l:"Stage",all:"All Stages"},
+  ];
 
   const today=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+  const sumARR=arr=>arr.reduce((s,a)=>s+a.arr,0);
 
-  return (<>
-    <nav className="nav">
-      <div className="nav-in">
-        <div className="brand"><b>vieu</b> · Customer Dashboard</div>
-        <div className="nav-right">
-          <input className="search-input" placeholder="Search accounts…" value={search} onChange={e=>setSearch(e.target.value)}/>
-          {lastUpd&&<span className="last-upd">Updated {lastUpd}</span>}
-          <button className="upd-btn" onClick={()=>setData(null)}>↻ Update Data</button>
-          <span className="week-badge">Week of {today}</span>
-        </div>
+  return(<>
+    <nav className="nav"><div className="nav-in">
+      <div className="brand"><b>vieu</b> · Customer Dashboard</div>
+      <div className="nav-right">
+        <input className="search-input" placeholder="Search…" value={search} onChange={e=>setSearch(e.target.value)}/>
+        {lastUpd&&<span className="last-upd">Updated {lastUpd}</span>}
+        <button className="upd-btn" onClick={()=>setData(null)}>↻ Update Data</button>
+        <span className="week-badge">Week of {today}</span>
       </div>
-    </nav>
+    </div></nav>
+
     <div className="main">
       <div>
         <div className="eyebrow">Major Accounts · CEO Sync</div>
@@ -535,62 +509,83 @@ function App(){
           {[
             {l:"Total ARR",v:fmtARR(totalARR),s:`${data.length} accounts`,c:"sv-a"},
             {l:"Healthy ARR",v:fmtARR(healthyARR),s:`${happy.length} accounts`,c:"sv-g"},
-            {l:"ARR at Risk",v:fmtARR(riskARR),s:`${atRisk.length} accounts`,c:"sv-b"},
+            {l:"ARR at Risk",v:fmtARR(riskARR),s:`${allRisk.length} accounts`,c:"sv-b"},
             {l:"EN Pipeline",v:fmtARR(enPipeline),s:"Expansion",c:"sv-a"},
-            {l:"Needs LT Help",v:needsLT.length,s:`${needsLT.length} accounts`,c:"sv-r"},
-            {l:"Testimonials",v:totalT,s:`${data.reduce((s,a)=>s+a.users.test,0)} user · ${data.reduce((s,a)=>s+a.inf.test,0)} influencer`,c:"sv-a"},
-          ].map(x=>(
-            <div key={x.l} className="stat-card">
-              <div className="stat-label">{x.l}</div>
-              <div className={`stat-value ${x.c}`}>{x.v}</div>
-              {x.s&&<div className="stat-sub">{x.s}</div>}
-            </div>
-          ))}
+            {l:"Advocates",v:totalAdvocates,s:"Across all accounts",c:"sv-g"},
+            {l:"Testimonials",v:totalTests,s:`${data.reduce((s,a)=>s+a.users.test,0)} user · ${data.reduce((s,a)=>s+a.inf.test,0)} influencer`,c:"sv-a"},
+          ].map(x=>(<div key={x.l} className="stat-card"><div className="stat-label">{x.l}</div><div className={`stat-value ${x.c}`}>{x.v}</div>{x.s&&<div className="stat-sub">{x.s}</div>}</div>))}
         </div>
       </div>
 
       <Testi/>
 
-      {needsLT.length>0&&(
-        <div className="lt-banner">
-          <span className="lt-label">● Leadership action needed this week:</span>
-          {needsLT.map(a=>(
-            <button key={a.id} className="lt-chip" onClick={()=>setSelected(a)}>{a.name} — {a.help}</button>
-          ))}
-        </div>
-      )}
-
       <div className="filter-bar">
-        <span className="fb-label">Filter</span>
-        <div className="fb-div"/>
-        {FDEFS.map(f=>(
-          <div key={f.k} className="fg">
-            <span className="fg-label">{f.l}</span>
-            <select className={`fsel${filters[f.k]!=="all"?" on":""}`} value={filters[f.k]} onChange={e=>setF(f.k,e.target.value)}>
-              {uniq(f.k).map(o=><option key={o} value={o}>{o==="all"?f.all:o}</option>)}
-            </select>
-          </div>
-        ))}
+        <span className="fb-label">Filter</span><div className="fb-div"/>
+        {FDEFS.map(f=>(<div key={f.k} className="fg"><span className="fg-label">{f.l}</span>
+          <select className={`fsel${filters[f.k]!=="all"?" on":""}`} value={filters[f.k]} onChange={e=>setF(f.k,e.target.value)}>
+            {uniq(f.k).map(o=><option key={o} value={o}>{o==="all"?f.all:o}</option>)}
+          </select></div>))}
         <div className="fb-div"/>
         {active>0&&<button className="f-clear" onClick={clearAll}>✕ Clear {active}</button>}
         <span className="f-count">{filtered.length} of {data.length} accounts</span>
       </div>
 
-      <table className="tbl">
-        <thead><tr className="tbl-head">
-          <th>Account</th><th>ARR</th><th>Status</th><th>Channel</th><th>Delivery</th>
-          <th>% Users Happy</th><th>% Inf Happy</th><th>% Sponsor Happy</th><th>Priority & LT Help</th>
-        </tr></thead>
-        <tbody>
-          {filtered.map(a=><Row key={a.id} a={a} onClick={setSelected}/>)}
-        </tbody>
-      </table>
-      {filtered.length===0&&<div className="empty">No accounts match your filter.</div>}
+      {/* KANBAN */}
+      <div className="kanban">
+        {/* CHURNED LANE */}
+        <div className="lane">
+          <div className="lane-header">
+            <div className="lane-title"><span className="lane-dot ld-red"/>Churned</div>
+            <div className="lane-meta">{churned.length} accounts · {fmtARR(sumARR(churned))}</div>
+          </div>
+          <div className="lane-cards">
+            {churned.length>0?churned.sort((a,b)=>b.arr-a.arr).map(a=><KCard key={a.id} a={a} onClick={setSelected}/>)
+              :<div className="empty">No churned accounts</div>}
+          </div>
+        </div>
+
+        {/* RISK LANE — 3 sub-sections */}
+        <div className="risk-lane">
+          <div className="lane-header">
+            <div className="lane-title"><span className="lane-dot ld-amber"/>At Risk</div>
+            <div className="lane-meta">{allRisk.length} accounts · {fmtARR(sumARR(allRisk))}</div>
+          </div>
+
+          {[
+            {label:"External",accounts:riskExt},
+            {label:"Cold",accounts:riskCold},
+            {label:"Build Advocacy",accounts:riskBuild},
+          ].map(sec=>(
+            <div key={sec.label} className="risk-section">
+              <div className="risk-sub-header">
+                <span>{sec.label}</span>
+                <span className="risk-sub-meta">{sec.accounts.length} · {fmtARR(sumARR(sec.accounts))}</span>
+              </div>
+              <div className="lane-cards">
+                {sec.accounts.length>0?sec.accounts.sort((a,b)=>b.arr-a.arr).map(a=><KCard key={a.id} a={a} onClick={setSelected}/>)
+                  :<div className="empty" style={{padding:16}}>None</div>}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* HAPPY LANE */}
+        <div className="lane">
+          <div className="lane-header">
+            <div className="lane-title"><span className="lane-dot ld-green"/>Happy</div>
+            <div className="lane-meta">{happy.length} accounts · {fmtARR(sumARR(happy))}</div>
+          </div>
+          <div className="lane-cards">
+            {happy.length>0?happy.sort((a,b)=>b.arr-a.arr).map(a=><KCard key={a.id} a={a} onClick={setSelected}/>)
+              :<div className="empty">No happy accounts</div>}
+          </div>
+        </div>
+      </div>
 
       <div className="footer">
         <span>{data.length} accounts · {fmtARR(totalARR)} ARR</span>
-        <span>Users: {happyU}/{totalU} happy</span>
-        <span>Testimonials: {totalT}</span>
+        <span>Advocates: {totalAdvocates}</span>
+        <span>Testimonials: {totalTests}</span>
         <span>Week of {today}</span>
       </div>
     </div>
